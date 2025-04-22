@@ -1,0 +1,1 @@
+puts srand((Time.now.to_i + rand(100) + $grobal_rand_num += 1) % 3)
