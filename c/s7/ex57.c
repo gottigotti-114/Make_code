@@ -1,0 +1,66 @@
+/*****************************
+ex57.c
+******************************/
+#include <stdio.h>
+
+int main ( void )
+{
+	char pat[5][5] = {
+		{'*','*','*','*','*'},
+		{'*',' ',' ',' ',' '},
+		{'*','*','*',' ',' '},
+		{'*',' ',' ',' ',' '},
+		{'*',' ',' ',' ',' '}
+
+	};
+	char after[5][5];
+	int i,j;
+	int ans;
+
+	//äÓÇÃê}å`ï`âÊ
+	printf("\n[BEFORE]\n");
+	for(i=0; i<5; i++){
+		for(j=0; j<5; j++){
+			printf("%c",pat[i][j]);
+		}
+		printf("\n");
+	}
+
+	//âÒì]ï˚ñ@ÇÃéÊìæ
+	printf("\nâÒì]ï˚ñ@ÇéwíËÇµÇƒÇ≠ÇæÇ≥Ç¢\n");
+	printf("(è„â∫îΩì]ÅFÇP,ç∂âEîΩì]ÅFÇQ,âE90ìxâÒì]ÅFÇR,ç∂90ìxâÒì]ÅFÇS)>> ");
+	scanf("%d",&ans);
+
+	//âÒì]
+	for(i=0; i<5; i++){
+		for(j=0; j<5; j++){
+			switch(ans){
+				case 1: after[i][j]=pat[4-i][j];
+				break;
+
+				case 2: after[i][j]=pat[i][4-j];
+				break;
+
+				case 3: after[i][j]=pat[4-j][i];
+				break;
+
+				case 4: after[i][j]=pat[j][4-i];
+				break;
+
+				default: after[i][j]=pat[i][j];
+				break;
+			}
+		}
+	}
+
+	//åãâ ÇÃï\é¶
+	printf("\n[AFTER]\n");
+	for(i=0; i<5; i++){
+		for(j=0; j<5; j++){
+			printf("%c",after[i][j]);
+		}
+		printf("\n");
+	}
+
+	return 0;
+}

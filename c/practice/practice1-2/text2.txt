@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main ( void )
+{
+	int a;
+	int i;
+	char moji[100]
+
+	printf("数値を入力してください\n");
+	scanf("%d",a);
+
+	printf("文字を入力してください>>");
+	scanf("%s",&moji);
+
+	for(i=0; i<a; i++){
+		printf("%c",moji[i]);
+	}
+
+	return 0;
+}

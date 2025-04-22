@@ -1,0 +1,6 @@
+typedefをすれば変数の型をdefineできる
+typedef struct SEISEKI_DATE SEISEKI;
+はstruct SEISEKI_DATEという型を省略してSEISEKIという型にするという意味
+typedef struct SEISEKI_DATE{}SEISEKI;と定義できるけど
+結局はSEISEKI_DATEのタグは不要なので
+typedef struct{}SEISEKI;ともっと省略できる
