@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+/*メイン設定*/
+.main_header {
+  text-align: center;
+  background-color: antiquewhite;
+}
+/*メイン設定ここまで*/
+
+/*ナビゲーション設定*/
+nav ul{
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+nav a {
+  display: inline-block; /*transformを適用するためにinline-blockにする*/
+  text-align: center;
+  transition: transform 0.2s ease-out; /*なめらかに動かす*/
+  text-decoration: none;
+  border-bottom: 1px solid black;
+  padding: 15px 20px 5px 20px;
+  background-color: beige;
+}
+nav a:link{
+  text-decoration: none;
+  color: black;
+}
+nav a:visited{
+  text-decoration: none;
+  color: black;
+}
+nav a:active{
+  text-decoration: none;
+  color: rgb(239, 239, 89);
+}
+nav a:hover{
+  text-decoration: none;
+  color: rgb(131, 131, 16);
+  transform: translateY(-5px); /*5px上に移動*/
+}
+/*ナビゲーション設定　ここまで*/
