@@ -526,10 +526,20 @@ rails test
 <title><%= yield(:title) %> | Ruby on Rails Tutorial Sample App</title>
 ```
 ### 注意点
-もしも<%= yield %>で
+もしも<%= yield %>だけだと、ビューの内容が送られる
 
+## ルーティングについて
+### routes.rbの主な設定は以下の通り
+- ### get "コントローラ名/アクション名" <- 指定したURLにGET送信を許可する
+- ### post "コントローラ名/アクション名" <- 指定したURLにPOST送信を許可する
+- ### root "コントローラ名#アクション名" <- ルートにアクセスしたとき、指定したコントローラにアクションを実行する
+
+    例：localhost:3000/だけで指定したhomeやhelpなどのアクションページに移動できる
+
+- ### "URL" ,to: "コントローラ名#アクション名" <- 指定したURLにアクセスしたとき、指定したコントローラのアクションを実行する
+- ### resources :コントローラ名 <- 指定されたコントローラに対し、indexやupdateなど、定型なアクションを許可する（RESTアーキテクチャー）
 ## Rails豆知識
 - ### \<em>タグは斜めにする
 - ### get送信はURL事態に情報が埋め込まれている
 - ### routes.rbにget 'static_pages(アプリの名前)/about(コントローラ名)'を作ると、自動的にstatic_pages_about_urlのような変数が自動的に作成される
-
+- ### resources :authors(コントローラ名)としたらcreateやupdateなど自動的に作られる。
