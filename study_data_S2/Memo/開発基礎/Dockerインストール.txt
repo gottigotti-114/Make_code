@@ -1,1 +1,3 @@
 https://www.docker.com/get-started/
+
+echo %PROCESSOR_ARCHITECTURE%
