@@ -150,3 +150,37 @@ while count < 5:
   print(count)
   count += 1
 ```
+
+### for文で繰り返し1 ~ 10をする方法
+```py
+for i in range(9): # rangeでインクリメントされていく
+  print(i+1)
+```
+
+## メソッドの作り方
+### 返り値のreturnをつける
+```py
+def greet(name):
+  return f"こんにちは{name}さん"
+
+greet("花子")
+```
+### rubyのようなreturnなしはできない
+```py
+def greet(name):
+  name
+
+greet("花子")
+```
+```
+結果：None
+```
+
+## クラスの作り方
+### コンストラクタ
+```py
+class Person:
+  def __init__(self,name): # パイソンのメソッドは第一引数に自分が所属するインスタンス名を書かないといけない
+    self.name = name
+```
+
