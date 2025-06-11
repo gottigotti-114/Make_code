@@ -177,10 +177,52 @@ greet("花子")
 ```
 
 ## クラスの作り方
-### コンストラクタ
+### コンストラクタは__init__を使う
+### インスタンスメソッドはselfを引数とし、self.メンバ変数でインスタンス変数にアクセスできる。
 ```py
 class Person:
   def __init__(self,name): # パイソンのメソッドは第一引数に自分が所属するインスタンス名を書かないといけない
     self.name = name
+
+  #インスタンスメソッドはself（自分自身）を引数としないといけない。
+  def display(self):
+    print(f"名前は{self.name}")
+```
+
+## クラスの継承
+### 継承する際は、親クラスを引数としてクラスを定義する。コンストラクタでは、super()親クラスを参照できる
+```py
+class Animal(LivingThings):
+  def __init__(self,name,age,birthday):
+    super().__init__(name,birthday)
+    self.age = age
+
+  def display_data(self):
+    super().display_data()
+    print(f"年齢：{self.age}")
+```
+
+## クラスメソッド、スタティックメソッドの追加
+### @マークを使って、区別する
+```py
+@classmethod #クラスメソッドはクラス変数を呼び出せて、クラス外部内部両方から呼べる
+メソッド名:
+
+@staticmethod #スタティックメソッドはクラス変数を扱えず、単独でしか機能しない
+メソッド名：
+```
+
+## カプセル化について
+### カプセル化をするものの直前に__をつける
+```py
+class Person:
+  __age = 19 #カプセル化をする変数は__を事前に着ける
+
+  def __init__(self,name,age):
+    self.name = name
+    self.__age = age
+
+  def getAge(self):
+    return self.__age
 ```
 
