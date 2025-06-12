@@ -12,3 +12,6 @@ class Person:
 human = Person("藤原",19)
 
 print(human.getAge())
+
+## カプセル化した変数にアクセスしてみる
+# print(human.__age)

@@ -225,4 +225,16 @@ class Person:
   def getAge(self):
     return self.__age
 ```
+```py
+# 上でカプセル化した変数にアクセスしてみる
+human = Person("田中",18)
 
+print(human.__age)
+```
+```結果```
+```
+Error
+```
+
+# データの分析ついて
+## 標準偏差のおさらい
