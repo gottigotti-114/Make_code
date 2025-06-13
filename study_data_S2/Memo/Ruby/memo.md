@@ -1135,3 +1135,185 @@ class クラス名
   end
 end
 ```
+
+### protectedの使い方
+```ruby
+class Name
+    def initialize(name)
+        @name = name
+    end
+    def return_name(obj = self)
+        obj.name
+    end
+    def return_protected_name(obj = self) #ここでインスタンス変数を定義している
+        obj.name #これがクラス内部のインスタンス
+    end
+
+    protected
+    def name
+        @name
+    end
+end
+
+n = Name.new("坂根")
+puts "return_name"
+puts n.return_protected_name
+```
+
+### 後からでもアクセスの範囲を設定できる。
+
+```ruby
+private :メソッド名, :メソッド名...
+protected :メソッド名, :メソッド名...
+```
+指定するメソッドは定義済みの必要がある。
+
+## ポリモーフィズム
+### ポリモルフィズムや多様性とも言われる。
+### 同じような仕事をするメソッドであれば、同じ名前にする考え方
+
+    例、三角形の面積を求めるクラスSankakuと
+        四角形の面積を求めるクラスShikakuを作成する
+
+        面積の求め方は異なるが、どちらも縦と横のプロパティを持ち、面積を返すメソッドがある。
+
+### ポリモーフィズムを考えるときに継承や抽象クラスの考え方が必要になる。
+
+
+## ダックタイピング
+### 「アヒルのように歩き、アヒルのように鳴くのであれば、アヒルに違いない」という言葉からできた。
+### オブジェクトの種類を決めるのは、名前ではなくその動作という考え方。継承などを使わずにポリモーフィズムを行うときに使われる。
+```ruby
+zukei = [Sankaku.new(10,20),shi = Shikaku.new(10,20)]
+
+zukei.each do |z|
+    puts z.menseki
+end
+```
+
+## raise
+### raiseは例外処理を意図的に発生させることのできるコード
+```ruby
+raise ZeroDivisionError, "ゼロで割りました"
+# ./Main.rb:17:in `<main>': ゼロで割りました (ZeroDivisionError)が出力される
+```
+```
+書き方
+raise エラークラス , 自由にエラーメッセージ
+```
+
+## オリジナルの例外を作成する
+### クラスの内部よりオリジナルの例外を発生させることがある。オリジナルの例外を発生させるには、StandardErrorを継承したクラスを作成し、その例外をraiseを使い発生させる。
+
+## エラーメッセージを作る方法の2パターン
+- ### raiseを使う
+```ruby
+raise RangeError, "範囲外が検出されました" if point < 0 || point > 100
+```
+
+- ### クラスのmessageメソッドをオーバーライドする
+```ruby
+  class RangeError < StandardError
+    def message
+      "範囲外が検出されました"
+    end
+  end
+```
+
+## オープンクラス
+### Rubyの場合、システムが定義したクラスもメソッドを追加したり、オーバーライドや継承ができる。このような仕組みをオープンクラスという。
+
+```ruby
+class Integer
+  def +(atai)
+    self * atai
+  end
+end
+
+puts 10 + 10
+```
+
+## 変わったメソッドの考え方
+```ruby
+class Integer
+  def self.aisatsu
+    "integer型"
+  end
+  def +(atai)
+    self * atai
+  end
+end
+
+#これは10というメソッドの+メソッドを呼び出して、20は引数
+puts 10 + 20
+```
+
+## 特異メソッドと特異クラス
+### インスタンスに対し、メソッドを追加やオーバーライドすることができる。追加されたメソッドを特異メソッド、追加されたインスタンスを特異クラスという。
+
+```ruby
+class Shikaku
+  def initialize(tate,yoko)
+    @tate, @yoko = tate, yoko
+  end
+  def menseki
+    @tate * @yoko
+  end
+end
+shikaku = Shikaku.new(10,20)
+sankaku = Shikaku.new(10,20) #<-特異クラス
+
+def sankaku.menseki
+  @tate * @yoko / 2
+end
+
+puts shikaku.menseki
+puts sankaku.menseki
+```
+
+## 構造体（Struct）
+### オブジェクトはデータとメソッドの集まりになる。データだけのオブジェクトを作る必要がある時は、構造体を定義する。
+
+  構造体名 = Struct.new(:フィールド名, :フィールド名, ...)
+
+#### ※データの塊が構造体、メソッドのあるデータの塊がオブジェクト
+
+## 構造体にメソッドを追加する
+### 構造体は通常データの集まりで、メソッドは存在しないが、rubyの場合メソッドを書くこともできる
+
+    構造体名 = Struct.new(:フィールド名, :フィールド名, ...) do
+      def メソッド名
+        処理
+      end
+    end
+
+## モジュール
+### 構造体がデータの集まりであるなら、モジュールはメソッド定数の集まりになる。
+### 様々なクラスやプログラムで共通で使えるメソッドを定義しておき、それを呼び出すことでプログラムの再利用性を高める
+
+## モジュールとクラスの違い
+- ### モジュールはインスタンスを作成できない
+      あくまでメソッドや定数は呼び出すことで利用される
+- ### 継承できない
+      継承してオーバーライドするような使い方はしない。追加したい項目があれば該当モジュールに普通に追加する
+
+## モジュールの定義
+```
+module モジュール名
+  def メソッド名
+    処理
+  end
+  module_function :外部から呼び出すことができるメソッド名, ...
+end
+```
+
+### モジュールで定義されたメソッドはモジュール内からしか呼び出すことができず、モジュール外部から呼び出すときはmodule_functionでメソッドを指定する。モジュール名は英大文字から開始する。
+
+## モジュールで定義したメソッドの呼び出し
+### 主に二つの呼び出し方法がある。
+- ### モジュール名を付けて呼び出す。
+    モジュール名.メソッド名で呼び出す。
+- ### includeで読み込んで使用する
+    include モジュール名 とすることでメソッド名だけで呼び出されるようになる
+    また、module_functionで指定していないメソッドも呼び出すことができる
+    

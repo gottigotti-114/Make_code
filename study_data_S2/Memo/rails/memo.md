@@ -494,7 +494,8 @@ rails test
   - ### failures → 期待通りの結果にならなかったテストの数
   - ### errors → コード自体に致命的なエラーがある数
   - ### skips → スキップされたテストの数
-
+  - ### Expected: 実際になっているエラーデータ
+  - ### Actual: 本来はこうなるべきデータ
 
 
 
@@ -538,8 +539,284 @@ rails test
 
 - ### "URL" ,to: "コントローラ名#アクション名" <- 指定したURLにアクセスしたとき、指定したコントローラのアクションを実行する
 - ### resources :コントローラ名 <- 指定されたコントローラに対し、indexやupdateなど、定型なアクションを許可する（RESTアーキテクチャー）
+
+## ヘルパーについて
+
+    ヘルパー...
+      各コントローラに対し一つ作成されるモジュール。コントローラーとビューで使用できる。Railsが準備したシステムヘルパーと自分で作成するカスタムヘルパーがある。
+
+
+## moduleタグについて
+### 様々なところから呼び出される物はmoduleタグが使われる
+### app/helpers/application.html.erbがヘルパー記述欄
+
+```ruby
+# application.html.erbに以下
+module ApplicationHelper
+  # viewsでfull_titleメソッドを実行できる
+  def full_title(page_title = "")
+    base_title = "Ruby on Rails Tutorial Sample App"
+    if page_title.empty?
+      base_title
+    else
+      "#{page_title} | #{base_title}"
+    end
+  end
+end
+```
+
+## rails consoleについて
+### railsの環境でコマンド操作が行えるもの
+### modelやhelperなどのチェックも行える
+### ※rails cでインタプリタが使える
+
+    >a= 1
+    >b = 2
+    >a+b
+    => 3
+    というように出る。
+
+    >User.all
+    とすれば、全件出力
+    >User.find(1)
+    とすれば、idが1の人を出力
+
+
+## モックアップ
+### 画面を作る設計図のこと
+
+## link_toメソッド
+### viewの中でアンカータグ（リンクタグ）を作成するためのメソッド。link_to表示する文字列、リンク先の文字列
+#### ※(#)シャープをリンク先のところに置く理由。リンク先が確定しない場合、シャープを置く。つまりシャープはスタブということになる
+
+## image_tagメソッド
+### イメージファイルを表示するためのタグ。イメージはappの中のassetsの中のimagesに保存する
+
+    image_tag(ファイル名, [alt:画像が表示されなかったときに表示する文字列, オプション])
+
+## gemファイルについて
+### railsやrubyで機能を追加したいときはgemというパッケージ毎にインストールを行う。
+### railsの場合、プロジェクトフォルダの直下にGemfileとGemfile.lockというファイルがある。
+
+## gemのインストールについて
+```
+  gem install gemファイル名 [オプション]
+または
+  bundle install
+
+ファイル名を指定しない場合、Gemfile.lockを参照し、該当のgemがない時はインストールする。そのあとGemfileを参照し、インストールなどを行う。
+インストール後、新規でインストールされたgemはgemfile.lockに登録される。
+つまりGemfileが変われば、Gemfile.lockも変わる
+```
+
+## ブートストラップについて
+### レンダリング処理の時にブートストラップが使われる
+
+## パーシャルについて
+### railsでホームページを作成する際に様々な場所から呼び出されるものは、別ファイルにして置き、それを読み込むことで使用する。このことをパーシャルという
+
+### パーシャルの読み込み方 -> 読み込む方
+  render "viewsの中のフォルダ/ファイル名"
+### パーシャルの読み込み方 -> 読み込まれる方
+  viewのフォルダ名/_ファイル名.拡張子
+#### ※アンダーバーがあるファイルは基本的は取り込まれるべきファイルと考えるとよい
+
+## assetsについて
+### 共通でつかうものやimagesなど、コンピュータ資源などが入っている
+
+## アセットパイプラインとは
+### javascriptやスタイルシートなどの静的なファイルを管理するもの
+#### ※一般的には資産という意味で、ITの世界では素材の意味でつかわれている
+
+## アセットパイプラインのフォルダ
+- ### app/assets ... 現在のプロジェクトのアセット
+- ### lib/assets ... 共有されいてるアセット
+- ### vender/assets ... サードパーティ（開発支援で使う他社のパッケージ）用
+
+## config/manifest.jsについて
+### アセットパイプラインが働いて最後に一つにまとめられて使用される特徴がある
+### 以下：manifest.js
+```js
+//= link_tree ../images
+//= link_directory ../stylesheets .css
+//= link_tree ../../javascript .js
+//= link_tree ../../../vendor/javascript .js
+//= link stimulus-loading.js
+```
+
+## マニフェストファイル
+### assetsでディレクトリに保存されたファイルをどのように統合するかを決めるファイル。
+### 通常はマニフェストファイルに読み込む順番を設定していく
+
+    スタイルシート用
+      assets/stylesheets/application.css
+    javascript用
+      assets/javascripts/application.js
+
+## マニフェストファイルの設定
+### コメントの中にどのファイルを読み込むか設定を行う
+- ### *= require ファイル名 ... 指定したファイルを読み込む
+- ### *= require_tree パス ... 指定したパスからツリー構造で読み込む
+- ### *= require_self ... 自分自身を読み込む
+
+## 最初にrequire_tree .をするのはなぜ
+```css
+*= require_tree .
+*= require_self
+```
+### 上のようにrequire_tree .とは、最初に自分自身を読み込むということ
+#### ※先に自分自身を読み込めば、自分自身が先に優先されるように設定される
+
+## プリプロセッサ
+### ファイルの結合やコンパイルなどを行うもの。
+### Railsの場合、スタイルシートも独特な記載方法（scss, sass）があり、それをコンパイルし、一つのファイルにまとめる
+
+## sassとは
+### スタイルシートに変数や外部ファイルの読み込みなどプログラムの要素を取り入れたもの。サスまたはサースよ呼ばれる。
+### box1クラスの中のbox2に対する設定↓↓↓↓
+```css
+/*cssの場合*/
+  .box{
+    設定;
+  }
+  .box h1{
+    設定;
+  }
+/*sassの場合*/
+  .box{
+    設定;
+
+    h1{
+      設定;
+    }
+  }
+```
+```css
+/*例、box1とbox2のクラスの背景色を#123456にする*/
+/*css*/
+  .box{
+    background-color: #123456;
+  }
+  .box2{
+    background-color: #123456;
+  }
+/*sass*/
+  $変数名: 設定する物;
+  .box{
+    background-color: $変数名;
+  }
+  ,box2{
+    background-color: $変数名;
+  }
+```
+
+### a:hoverを書くには & を使う
+```css
+a {
+  color: #555;
+  a {
+    color: #555;
+    &:hover{
+      color:#444;
+    }
+  }
+}
+```
+
+## testについて２
+### failuresとerrorsの違い
+
+- ### failures → 期待通りの結果にならなかったテストの数
+- ### errors → コード自体に致命的なエラーがある数
+
+#### >> 本来はこのような意味合いがある
+
+- ### failures -> アクセスはできたが、コードが違う
+- ### errors -> そもそもアクセスできなかった
+
+### どんな動作でエラー、フェイラーが出るのか
+
+    エラー
+    テストの実行中に予期しない例外が発生した場合
+    ・データベース接続の問題
+    ・未定義のメソッド呼び出し時
+    >>テスト自体が正常に完了しなかった場合
+
+    フェイラー
+    期待した結果と実際の結果が一致しなかった場合
+    ・必要なgemがインストールされていない
+    ・
+
+## 特定のURLにアクセスしたらコントローラを実行
+### routes.rbに以下の設定をすると可能になる
+```rb
+# localhost:3000/helpとすると、static_pagesコントローラのhelpを実行し、helpにアクセスされる
+get '/help', to: "static_pages#help"
+```
+
+## testのgetについて
+### getはそのURLにアクセスしますよという意味。
+
+```rb
+  test "should get help" do
+    get static_pages_help_url
+    assert_response :success
+    assert_select "title","Help | #{@base_title}"
+  end
+```
+
+## routes.rbの設定
+### 特定のURLにアクセスされてら、コントローラーのアクションを実行する
+```ruby
+  get "特定のURL", to: "コントローラー名#アクション名"
+```
+
+## 統合テスト
+### 各ページごとに行うテストを単体テスト、複数ページにまたがって行うテストを統合テストという
+### 統合テストを行うときは、統合テスト用のファイルを作成する
+
+```bash
+rails generate integration_test ファイル名
+# /test/integration/の中に指定したファイルが作成される
+```
+
+## 統合テストの主なassert
+  - ### 指定したViewファイルを利用したページか？
+
+        assert_template "viewファイルのパス"
+
+  - ### 指定したタグが存在しているか？
+    #### 注意点：タグの中に?を使い、「,値」を使うと?に代入される。また「count: 整数」とすることで、個数が正しいかチェックできる
+
+        assert_select "タグ"
+
+```test/integration```
+```ruby
+class SiteLayoutTest < ActionDispatch::IntegrationTest
+  test "layout links" do
+    get root_path
+    assert_template "static_pages/home"
+    assert_select "a[href=?]",root_path,count: 2
+  end
+end
+
+# assert_select "a[href=?]",root_path,count: 2は、href=?の?の中に、root_pathが代入され、count: 2は、そのa[href=#{root_path}]が二個static_pages/homeにあるか確認する
+```
+
+## 統合テストの実行
+### 統合テストを行うときは以下のコマンドを実行する
+```bash
+rails test:integration
+```
+
+## なぜassertionsをしたのに、assersionsが+1ならないのか
+### assertionは、実行した際にチェックが行われずに終了した場合は、assertionsが+1とならず次へ行ってしまう。
+
+
+
 ## Rails豆知識
 - ### \<em>タグは斜めにする
 - ### get送信はURL事態に情報が埋め込まれている
 - ### routes.rbにget 'static_pages(アプリの名前)/about(コントローラ名)'を作ると、自動的にstatic_pages_about_urlのような変数が自動的に作成される
 - ### resources :authors(コントローラ名)としたらcreateやupdateなど自動的に作られる。
+

@@ -187,3 +187,234 @@ ON
 
 ### 例
 ![INNERJOINで結合](./ドキュメント/images/スクリーンショット%202025-05-20%20140158.png)
+### ここでretiredまでがemployeeでそこから右側がdepartになる
+
+## フィールドの取得
+```sql
+SELECT
+    e.l_name,
+    e.f_name,
+    d.depart_name,
+    e.class
+FROM
+    employee AS e INNER JOIN depart AS d
+ON
+    e.depart_id = d.depart_id
+WHERE
+-- 役職がなかった場合は1となる
+    e.retired <> 1
+ORDER BY
+    e.depart_id ASC,
+    e.s_id ASC;
+;
+```
+
+## 外部結合
+```sql
+SELECT
+    CONCAT(e.l_name,e.f_name),
+    AVG(t.work_time)
+FROM
+    employee AS e
+    LEFT JOIN
+    time_card AS t
+ON
+    e.s_id = t.s_id
+GROUP BY
+    e.s_id
+ORDER BY
+    AVG(t.work_time) DESC
+;
+```
+### イメージとしては->フィールド名1,2とフィールド名3をくっつける
+```
++------------------------------------------+
+フィールド名1 | フィールド名2 | フィールド名3 |
++------------------------------------------+
+xxxxxxxxx    |xxxxxxxxxxxx  | xxxxxxxxx    |
+xxxxxxxxx    |xxxxxxxxxxxx  | xxxxxxxxx    |
+xxxxxxxxx    |xxxxxxxxxxxx  | NULL         |
+xxxxxxxxx    |xxxxxxxxxxxx  | NULL         |
++------------------------------------------+
+```
+### RIGHT JOINは右側のテーブルを基準にして左側のテーブルに右側のフィールドのデータがなかったら、NULLとなる
+### LEFT JOINは上の左側バージョン
+
+## OUTER JOINについて
+### INNER JOINは論理積で考える -> NULLがどちらかにあれば表示しない
+### OUTER JOINは論理和で考える -> NULLがどちらかにあっても必ず表示する
+
+## 同一テーブル内のデータを結合する
+### 以下のようなものを作れば、リスト構造ができる
+```sql
+SELECT
+    *
+FROM
+    contents AS cc
+   INNER JOIN  
+    contents AS cn
+ON
+    -- ここで同じテーブル内のidを交じ合わせる
+    cc.next_id = cn.c_id
+;
+```
+![イメージ](./ドキュメント/images/スクリーンショット%202025-06-02%20191444.png)
+## 同一テーブルを三つ結合
+### ()の中が最初の結合、その次に()の外の設定で結合することで三つ結合が可能
+```sql
+SELECT
+    b.title,
+    a.name,
+    b.publish_date
+FROM
+    (
+        books AS b
+       INNER JOIN
+        author_books AS ab
+    ON
+        b.isbn = ab.isbn
+    )
+   INNER JOIN
+    author AS a
+ON
+    ab.author_id = a.author_id
+WHERE
+    b.publish = '日経BP'
+ORDER BY
+    b.publish_date DESC
+;
+```
+### 赤色がひとつめの結合
+### 黄色が二つ目の結合
+![上記のプログラムの見方](./ドキュメント/images/スクリーンショット%202025-06-02%20201405.png)
+
+## サブクエリ
+### 二つのクエリを同時に実行する
+```sql
+SELECT
+    name,
+    age,
+    answer1,
+    answer2
+FROM
+    quest
+WHERE
+-- ここで毎回、新鮮な平均年齢を得ることができる -> 直接書く手間が省ける
+    age > (SELECT AVG(age)
+            FROM quest)
+ORDER BY
+    answer1 ASC
+;
+```
+
+## NOT INについて
+### NOT IN演算子は、IN演算子の反対である。
+```
+IN(a,b,c) ... この中に、指定したものがあるか？
+NOT IN(a,b,c) ... この中の、指定したものではないか？
+```
+![イメージ](./ドキュメント/images/スクリーンショット%202025-06-04%20121159.png)
+### 以下のテーブルからサブクエリで抽出し、持ってくるイメージ
+![いめーじ](./ドキュメント/images/スクリーンショット%202025-06-04%20121737.png)
+
+## NOT EXISTS()について
+### NOT EXISTS()はEXISTSの反対で、存在していたらFalseになる。もしも存在していなかったらTrueとなり、実行される
+```sql
+SELECT
+    l_name,
+    f_name
+FROM
+    usr
+WHERE NOT EXISTS ( -- 以下のクエリを実行して、rentalテーブルにuser_idが存在していなかったら取り出す
+    SELECT
+        *
+    FROM
+        rental
+    WHERE
+        rental.user_id = usr.user_id
+);
+```
+## CREATE VIEWについて
+### CREATE VIEWでメソッドのように呼び出しが行うことができる
+```sql
+CREATE VIEW
+    view_sales
+AS
+    SELECT
+        s_id
+    FROM
+        sales
+    WHERE
+        s_date = '2012-12'
+;
+
+SELECT * FROM view_sales;
+```
+
+## UNION句
+### 二つのクエリの結果を純粋に結合する -> INNER JOINのもっと分かりやすいバージョン
+```sql
+SELECT
+    u.l_name_kana,
+    u.f_name_kana,
+    'a'
+FROM
+    usr AS u
+UNION --上のクエリと下のクエリをそのまま横に結合して表示
+SELECT
+    e.l_name_kana,
+    e.f_name_kana
+    e.sex
+FROM
+    employee AS e
+ORDER BY 1,2
+```
+
+### UNION ALLについて
+
+    UNION ALLとは、重複したデータも全て表示する機能である
+
+## 差集合と和集合 -> バージョンで動かないやつがたくさんある
+### EXCEPT演算子 -> 差集合
+### INTERSECT演算子 -> 積集合
+
+## 挿入クエリ
+### そのテーブルの基準のフィールドの順に指定する
+```sql
+INSERT INTO
+    usr
+VALUES(
+    'A200507',
+    '鈴木',
+    '徳次郎',
+    'スズキ',
+    'トクジロウ',
+    '群馬県',
+    '群馬市北町',
+    '1-1-1',
+    '040-999-9999',
+    NULL
+)
+```
+### フィールドを最初から指定して挿入
+```sql
+INSERT INTO usr (
+    user_id, --ここでどのフィールドに挿入するか決める
+    l_name,
+    f_name,
+    l_name_kana,
+    f_name_kana,
+    tel
+)
+VALUES
+(
+    'B200507', --ここで上の指定したフィールドにこのデータを入れる
+    '神田',
+    '愛',
+    'カンダ',
+    'アイ',
+    '040-888-8888'
+)
+```
+#### ※ここで指定しなかったフィールドにNULLを入れていいか、確認してから行う
+
