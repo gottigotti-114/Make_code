@@ -324,3 +324,51 @@ print(df.describe())
 filtered_df = df[df["age"] >= 30]
 print(filtered_df)
 ```
+
+### PythonでAND演算子
+```py
+# Pythonで○○かつ○○をするには
+if a & b
+# Pythonで論理積をするには
+print(a and b)
+```
+
+## それぞれのフィールドを扱う
+### インスタンス名["フィールド名"]で指定
+```py
+print(df["体重"])
+print(df["身長"])
+```
+
+## タブで区切ってcsvファイルを表示するには
+### sepで挟むエスケープキーを選択。indexで行番号を表示するかどうか決める
+```py
+ # タブで区切って表示
+ # sep = 挟むエスケープシーケンス
+ # index = 行番号の有無
+ print(filtered_df2.to_csv(sep="\t", index=False))
+```
+
+## 欠損値とは
+### 欠損値とは、Not a Numberのこと
+### 数値ではない値のこと。つまり=値が存在しないということになる
+
+## PythonにNULLはない
+### PythonではNULLのことをNONEと呼んでいる。しかし、PandasライブラリではNULLのことをNaNと呼んでいる。
+#### どちらもNullのような判定を持っている
+
+## 欠損値を消す
+### dropnaを使うことで、NaNがあるレコードを消すことができる
+```py
+df_clean = df.dropna() # df_cleanに結果を格納
+```
+### オプション一覧
+```
+axis=0 ... 行を削除
+axis=1 ... 列を削除
+how="any" ... NaNが一つでもあれば削除（default）
+how="all" ... 全部NaNの行だけ削除
+subset=["列名１",...] ... 特定の列だけを見て判断
+inplace=True ... 元のdf(インスタンス)を直接書き換える
+```
+
