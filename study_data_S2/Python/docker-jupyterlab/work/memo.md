@@ -349,7 +349,7 @@ print(df["身長"])
  print(filtered_df2.to_csv(sep="\t", index=False))
 ```
 
-## 欠損値とは
+## 欠損値とは -> section2/sample04
 ### 欠損値とは、Not a Numberのこと
 ### 数値ではない値のこと。つまり=値が存在しないということになる
 
@@ -364,6 +364,9 @@ df_clean = df.dropna() # df_cleanに結果を格納
 ```
 ### オプション一覧
 ```
+オプション書き方
+df.dropna(オプション, オプション, ...)
+
 axis=0 ... 行を削除
 axis=1 ... 列を削除
 how="any" ... NaNが一つでもあれば削除（default）
@@ -371,4 +374,76 @@ how="all" ... 全部NaNの行だけ削除
 subset=["列名１",...] ... 特定の列だけを見て判断
 inplace=True ... 元のdf(インスタンス)を直接書き換える
 ```
+
+## 欠損値を数える
+### isnull()でNaNにTrueをつけ、sum()でそのTrueの数を調べる
+```py
+# どこに欠損値があるか確認
+print(df.isnull())
+print(df.isnull().sum())
+```
+```結果1 - isnull()の機能```
+```bash
+# A10の年齢がTrueということは、A10がNaNだということになる
+
+     名前   年齢    体重   身長
+A01  False  False  False  False
+A02  False  False  False  False
+A03  False  False  False  False
+A04  False  False  False  False
+A05  False  False  False  False
+A06  False  False  False  False
+A07  False  False  False  False
+A08  False  False  False  False
+A09  False  False  False  False
+A10  False   True  False  False
+```
+```結果2 - sum()の機能```
+```bash
+# 年齢にNaNがあったので、年齢に+1されている
+
+名前    0
+年齢    1
+体重    0
+身長    0
+```
+
+## データ生成
+### サンプルデータをプログラム上で生成
+### DataFrameメソッドを使う。AやBはフィールド名で、[]内は、そのフィールドに追加するデータ。np.nanはNaNのことであり、Nullが格納されている
+#### ※AとBで要素数が違っていれば、エラーが出る。NaNをうまく使って要素数を同じにする
+```py
+ df = pd.DataFrame({'A': [1, np.nan, 3, 4, np.nan], 'B': [7, 8, np.nan, 10, 11]})
+```
+```生成後```
+```bash
+     A     B
+0  1.0   7.0
+1  NaN   8.0
+2  3.0   NaN
+3  4.0  10.0
+4  NaN  11.0
+```
+
+## NaNを取り扱うメソッド
+### NaNが入っているデータはあまりよくないので、NaNが入っている場所を別のデータに変更する。これを補完という。
+### 平均値で補完手順１は以下のようにする
+```py
+# NaNのある部分をその列の平均値に置き換える -> オブジェクトを作成
+imputer = SimpleImputer(strategy='mean')
+```
+### 補完オプション一覧
+```py
+'mean' = 平均値
+'median' = 中央値
+'most_frequent' = もっともよく出てくる値
+'constant' = ユーザが指定した一定の値
+```
+
+##　NaNを取り扱うメソッド２
+### 上記で、オブジェクトを生成したら補完手順２を行う
+```py
+df_filled = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+```
+
 
