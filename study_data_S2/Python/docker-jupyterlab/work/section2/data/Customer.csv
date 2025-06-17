@@ -1,0 +1,6 @@
+CustomerID,Name,Age,Gender,Country,SignupDate,PurchaseCount,TotalSpend,LastLogin,Membership
+1001,Anna,29,Female,Japan,2023-06-01,5,12000,2024-06-15,Gold
+1002,Ken,41,Male,Japan,2022-11-20,2,5000,2024-05-30,Silver
+1003,Yuki,35,Female,Japan,2024-01-18,10,30000,2025-06-10,Platinum
+1004,Taro,23,Male,Japan,2023-03-09,1,2500,2025-06-16,Bronze
+1005,Mei,38,Female,Japan,2022-08-04,7,17000,2025-06-17,Gold
