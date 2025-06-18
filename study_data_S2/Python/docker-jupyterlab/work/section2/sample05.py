@@ -16,4 +16,8 @@ print(df)
 imputer = SimpleImputer(strategy='mean')
 df_filled = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
+# 端数処理をする
+df_filled["A"] = round(df_filled["A"],1)
+df_filled["B"] = round(df_filled["B"],1)
+
 print(df_filled)

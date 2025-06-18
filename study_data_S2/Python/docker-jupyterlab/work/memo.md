@@ -440,10 +440,25 @@ imputer = SimpleImputer(strategy='mean')
 'constant' = ユーザが指定した一定の値
 ```
 
-##　NaNを取り扱うメソッド２
-### 上記で、オブジェクトを生成したら補完手順２を行う
+## NaNを取り扱うメソッド２
+### 上の補完手順１で、オブジェクトを生成したら補完手順２を行う
 ```py
 df_filled = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 ```
+### fit_transformについて
+#### fit_transformは以下のメソッドを組み合わせたものである
+- ### fit() ... もしstrategyがmeanだったら平均値を計算して覚えるのがfit
+- ### transform() ... fit()で学習した情報を使ってデータを変換する
+```
+例：あの列は平均10だったから、NaNは10で埋めよう...と実行する
+   |   fit()    |          |  transform() |
+```
+#### ※上記のような考え方が、俗にいう機械学習となる
 
+### columns=df.columnsの役割について
+#### df_filledに抽出データが格納されるものの、フィールド名はもらってこないので、フィールド名が、0,1,2,...という風に表示される。なので以下のオプションでフィールド名をdfから持ってきてあげる必要がある
+```py
+# columnsにdfのカラム名を入れてあげる
+... , columns=df.columns)
+```
 
