@@ -812,7 +812,189 @@ rails test:integration
 ## なぜassertionsをしたのに、assersionsが+1ならないのか
 ### assertionは、実行した際にチェックが行われずに終了した場合は、assertionsが+1とならず次へ行ってしまう。
 
+## ○○_pathで飛ぶようにする設定
+```ruby
+<%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
 
+# 上のsignup_pathにパス先のヘルパーが入る
+```
+
+## モデルの作成
+### ※モデルを作成したら必ずマイグレーションを行う
+```bash
+rails generate model モデル名 フィールド名:型名 フィールド名:型名 ...
+```
+### スキャフォールドと何が違うのか
+#### スキャフォールドはその詳細まで作ってくれるが、モデルはしてくれない
+
+## rails consoleでデータを追加する
+### Userモデルにデータ追加
+```rails c```
+```ruby
+user = User.new(name: "sakane", email:"sakane@icc.core.ac.jp")
+
+# userで入力したデータをそのままモデルに登録
+user.save
+```
+
+## モデルの使い方１
+- ### 全件のデータを取得する
+```rb
+モデル名.all
+```
+- ### 新しいインスタンスを作成する
+```rb
+モデル名.new
+```
+- ### 新しいデータを登録する
+```rb
+モデル名.create(フィールド名:値, フィールド名:値 ...)
+
+# モデル名に直接入力するので、saveはいらない
+```
+
+## インスタンスの使い方
+- ### データを参照する
+```rb
+インスタンス名.フィールド名
+```
+- ### データを登録する
+```rb
+インスタンス名.フィールド名 = 値
+```
+- ### インスタンスをデータベースに保存
+```rb
+インスタンス名.save
+```
+
+## データ取得
+### 該当のIDのデータを取得する
+```rb
+モデル名.find(id番号)
+```
+### 該当のデータを削除
+```rb
+インスタンス.destroy
+```
+
+### ID以外で検索する
+```rb
+モデル名.find_by(フィールド名: 値)
+```
+
+### 最初のデータを取得する
+```rb
+モデル名.first
+```
+
+### 最後のデータを取得する
+```rb
+モデル名.last
+```
+
+## バリデーション
+### データの登録・更新時に行うチェックのこと。モデルに記述を行う
+
+  - ### 必須入力チェック
+    ```rb
+    # app/modelsのuser.rbに記述
+    # これはフィールド名(例：name)が何か書いてないとfalseでエラーになってしまうという設定を作れる
+    validates :フィールド名, presence: true
+    ```
+
+  - ### 長さチェック
+    ```rb
+    validates :フィールド名, length: {長さの指定}
+      # 長さの指定
+      minimum: 数字 #... 何文字以上
+      maximum: 数字 #... 何文字以下
+      in: 範囲      #... 文字数が範囲内
+      is: 文字数    #... 文字数が指定された文字数
+    ```
+
+  - ### 文字数のパターンチェック
+    ```rb
+    validates :フィールド名, format: {with: 正規表現}
+    ```
+  - ### 一意性(一つ以上は存在していないという性質)
+    ```rb
+    # uniquenessは大文字、小文字もしっかり区別してくれる
+    validates :フィールド名, uniqueness: true
+
+    # 大文字・小文字を区別しない場合でバリデーションチェック -> case_sensitiveが大文字小文字区別オプション
+    validates :フィールド名, uniqueness: { case_sensitive: false }
+    ```
+  - ### 数値チェック
+    ```rb
+    validates :フィールド名, numericality: チェック項目
+      # チェック項目
+      :only_integer                   #...整数型か
+      :greater_than 数値              #...数値より大きいか
+      :greater_than_or_equal_tos 数値 #...数値 ... 数値以上か
+      :equal_to 数値                  #...数値と同じか
+      :less_than 数値                 #...数値より小さいか
+      :less_than_equal_to 数値        #...数値以下か
+    ```
+## バリデーションの有効性のチェック
+
+  - ### 有効性のチェック
+    ```rb
+    # 上記の付与した設定ルールを守っているかというのをrails consoleで確認できる。コードにも記述可能
+    インスタンス.valid? ... 登録できるデータならtrue, それ以外はfalseが返される
+    ```
+  - ### テスト用のデータベースの作成
+    ```bash
+    rails db:migrate RAILS_ENV=test
+    ```
+  - ### rails test:modelsの見方
+  ```rb
+      class UserTest < ActiveSupport::TestCase
+    def setup
+      @user = User.new(
+        name: "example User",
+        email: "user@example.com"
+      )
+    end
+
+    test "should be valid" do
+      assert @user.valid? # @userに値が存在するか？
+    end
+
+    test "name should be present" do
+      @user.name = "    "
+      assert_not @user.valid? # assert_notは失敗するか？ということで、@user.valid?で@userに値が入っていなくて、失敗するのでassert(成功)ということになる
+    end
+  end
+  ```
+
+## dupとは
+### rails testのdupとはなにか
+### dupは浅いコピーであり、中身のデータをコピーせず、設計図だけコピーする感じ
+```rb
+  test "email addresses should be unique" do
+    duplicate_user = @user.dup
+    @user.save
+    assert_not duplicate_user.valid?
+  end
+```
+## ダブルクリックの力
+### ダブルクリックをするとエラーチェックを通てしまうことがある。その対策のためのコマンドが以下だ
+
+## テーブルの変更
+### raildの場合、フィールド名の名前の変更や、フィールドの追加など、テーブルに変更を加えるときはマイグレーションファイルを作成し、変更内容を記述し、マイグレートを行う必要がある。
+### マイグレーションファイルの作成
+```bash
+rails g migration ファイル名
+```
+#### ※マイグレーションファイルのファイル名は規約によってつける
+```rb
+作業_作業内容_to_テーブル名_フィールド
+```
+### 例文
+```bash
+# usersテーブルのemailフィールドにindexを追加するというコマンド
+rails g migration add_index_to_users_email
+```
 
 ## Rails豆知識
 - ### \<em>タグは斜めにする

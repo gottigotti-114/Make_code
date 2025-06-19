@@ -1317,3 +1317,165 @@ end
     include モジュール名 とすることでメソッド名だけで呼び出されるようになる
     また、module_functionで指定していないメソッドも呼び出すことができる
     
+## Mix-in（ミックスイン）
+### クラスの中にモジュールを詰め込むことをミックスインという
+```ruby
+# モジュールの作成
+module Keisan
+    def shishagonyu(atai)
+        ((atai * 10) + 0.5).to_i / 10.0
+    end
+    module_function :shishagonyu
+end
+# 面積クラスの作成
+class Menseki
+    def menseki
+    end
+end
+# 面積クラスを継承し、四角クラスを作成
+class Shikaku < Menseki
+    def
+        initialize(tate,yoko)
+        @tate,@yoko = tate,yoko
+    end
+    def menseki
+        @tate * @yoko
+    end
+end
+# モジュールを取り込み、面積クラスを継承した、円クラスを作成
+class En < Menseki
+    include Keisan
+    def initialize(r)
+       @r = r
+    end
+    def menseki
+       shishagonyu(@r * @r * Math::PI)
+    end
+end
+```
+
+## モジュールを使った特異クラス
+### モジュールを使うことで特異クラスを作成することができる
+```rb
+オブジェクト.extend モジュール名
+```
+
+## 名前空間
+### 同名のメソッドや変数がある場合、その名前の前に識別できるものを追加する
+### Rubyの場合、モジュールを使うことで、モジュール名がそのまま名前空間にすることができる
+
+### クラスを名前空間を使って定義する方法
+```rb
+module モジュール名
+  class クラス名
+    処理
+  end
+end
+
+インスタンス名 = モジュール名::クラス名.new
+
+```
+### 応用
+```rb
+class モジュール名::クラス名
+  処理
+end
+
+# 呼び出し時
+モジュール名::クラス名
+```
+
+## 正規表現とは
+### 文字列のパターンチェックなどで使用されるもの
+
+## 正規表現の記述方法
+### /パターン/
+
+## パターンと一致したかのチェック
+### 制企業減を使用しパターンチェックを行いあっていることを、マッチするという
+### 主なチェックは以下の通り
+```rb
+if 正規表現 =~ 文字列
+  マッチしたときの処理
+else
+  アンマッチの時の処理
+end
+```
+
+## パターンの書き方
+- ### /XYZ/ ... XYZと一致するか
+- ### /[XYZ]/ ... []の中の一文字が含まれるかどうか
+- ### /[^XYZ]/ ... []野中以外の一文字が含まれるかどうか
+- ### /[X-Z]/ ... XからZまでの一文字が含まれるか
+- ### /[X|Y|Z]/ ... XかYかZと一致するか
+- ### /[X*]/ ... Xから始まる任意の1文字以上の文字列
+- ### * ... 直前の文字を0文字以上繰り返す。しかし直前の文字があれば1回以上繰り返す
+- ### + ... 直前の文字を1文字以上繰り返す
+- ### ? ... 直前の文字を0回か1回含む
+- ### {数字} ... 直前の文字を数字の回数繰り返す
+- ### {最小,最大} ... 直前の文字を最小~最大の回数繰り返す（どちらか片方は省略できる。例：/ab{,4}c/ .. 4文字以下
+```rb
+# abcが含まれているかどうか
+str = "xyzabc"
+
+if /abc/ =~ str ... True
+```
+```rb
+# aかbかcかいずれかが含まれてるか
+str = "axbycz"
+
+if /[abc]/ =~ str ... True
+if /abc/ =~ str ... False
+```
+```rb
+# a,b,c以外の文字が含まれているか
+str = "abc"
+str2 = "abcz"
+
+if /[^abc]/ =~ str ... False
+if /[^abc]/ =~ str2 ... True
+```
+```rb
+# 1 ~ 9までの任意の一文字が含まれている
+str = "abc3"
+str2 = "11"
+
+if /[1-9]/ =~ str ... True
+if /[1-9]/ =~ str2 ... True
+```
+```rb
+# 直前の0文字以上を繰り返す
+str = "abc"
+str2 = "abdc"
+str3 = "ac"
+
+if /ab*c/ =~ str ... True
+if /ab*c/ =~ str2 ... False
+if /ab*c/ =~ str3 ... True
+```
+```rb
+# 直前の文字を1文字以上繰り返す
+str = "abc"
+str2 = "ac"
+
+if /ab+c/ =~ str ...True
+if /ab+c/ =~ str2 ... False
+```
+```rb
+# 直前の文字を0回か1回含む
+str1 = "abc"
+str2 = "ac"
+str3 = "abbc"
+
+if /ab?c/ =~ str1 ... True
+if /ab?c/ =~ str2 ... True
+if /ab?c/ =~ str3 ... False
+```
+```rb
+# 直前の文字を指定回数分繰り返す
+str = "abbbbc"
+str2 = "abbbbbc"
+
+if /ab{4}c/ =~ str ... True
+if /ab{3,6}c/ =~ str ... True
+if /ab{,4}c/ =~ str2 ... False

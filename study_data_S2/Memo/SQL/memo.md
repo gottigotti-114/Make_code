@@ -319,6 +319,7 @@ NOT IN(a,b,c) ... この中の、指定したものではないか？
 
 ## NOT EXISTS()について
 ### NOT EXISTS()はEXISTSの反対で、存在していたらFalseになる。もしも存在していなかったらTrueとなり、実行される
+### ※書き方の注意：NOT EXISTSはサブクエリの結果がFalseだったらTrueになるのでWHERE NOT EXISTSという風に、書かないといけない
 ```sql
 SELECT
     l_name,
@@ -417,4 +418,92 @@ VALUES
 )
 ```
 #### ※ここで指定しなかったフィールドにNULLを入れていいか、確認してから行う
+
+## INSERTとSELECTクエリを混ぜる
+### SELECTクエリで取り出した値を、usrテーブルに追記する
+```sql
+INSERT INTO usr (user_id, l_name, f_name, email)
+SELECT
+    s_id,
+    l_name,
+    f_name,
+    'admin@wings.msn.to'
+FROM
+    employee
+WHERE
+    last_update >= '2012-01-01'
+;
+```
+
+## UPDATE命令
+### 値の変更を加えることができる
+```sql
+-- booksテーブルのpriceフィールドのデータをすべて1.05倍する
+UPDATE
+    books
+SET
+    price = price * 1.05
+;
+```
+
+### 条件を指定したレコードを更新する
+```sql
+-- idが3のデータを変更
+UPDATE
+    quest
+SET
+    answer1 = 3,
+    answer2 = ' ',
+    answered = NOW()
+WHERE
+    id = 3
+;
+```
+
+## DELETEクエリ
+### 指定したレコードを削除する
+```sql
+-- s_dateが2012-11以下のレコードを消す
+DELETE FROM
+    sales
+WHERE
+    s_date <= '2012-11'
+;
+```
+
+## トランザクション処理
+### リクエストが二つ来た時に片方を処理して、その次にもう片方を処理するような処理
+
+```sql
+-- トランザクション開始
+BEGIN;
+
+-- データの追加
+INSERT INTO books(isbn, title)
+VALUES('4-0010-000X','SQL入門2');
+
+-- booksテーブルの確認
+SELECT
+    isbn,
+    title
+FROM
+    books
+;
+```
+
+### ここでのトランザクション処理の説明
+```
+トランザクションを開始する ... BEGIN;
+以下のトランザクションを同時に実行する ... データの追加,booksテーブルの確認
+
+クエリの実行後にROLLBACKコマンドでロールバックし、なかったことにする
+```
+
+## ロールバック
+### すべての変更を取り消しにする
+### ロールバックが使えるのは、上にBEGIN;と書いてあるファイルだけ
+```bash
+# 直前のクエリ（更新や削除）をなかったことにする
+ROLLBACK;
+```
 
