@@ -575,6 +575,7 @@ Age
 
 ## 時系列データを指定した頻度でまとめ直す
 ### 日別データを月ごとや週ごとに集約する
+### 月ごとに(M)、日付順に(date)対象のフィールド(sales)を集計する(.sum())
 ```py
 # M=月, W=週, D=日, Y=年
 df.resample("M",on="日付順")["対象列"].集計関数()
@@ -594,3 +595,4 @@ df = pd.DataFrame({
 monthly_sales = df.resample("M", on="date")["sales"].sum()
 print(monthly_sales)
 ```
+

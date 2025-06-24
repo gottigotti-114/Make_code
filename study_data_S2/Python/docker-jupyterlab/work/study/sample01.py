@@ -1,13 +1,24 @@
 # pandasの参照
 import pandas as pd
 
-# クラス
+# クラス -> いろいろな情報を出力するメソッド集
 class NewData:
+
+    # コンストラクタ
     def __init__(self, fileName, pd):
         self.file = fileName
-        self.df = pd.read_csv(f"{self.file}")
+        self.pd = pd
+        self.df = self.pd.read_csv(self.file)
+
         
     def info(self):
-        print( self.df)
+        print( self.df )
     
-    def info( self, option ):
+    def info2( self, group, field ):
+        df = self.df.groupby(group)[field].sum()
+        print(df)
+
+data = NewData("./data/Sales_data.csv",pd)
+
+# 製品(Product)をグループ化して、値段(Price)の集計を求める
+data.info2("Product","Price")
