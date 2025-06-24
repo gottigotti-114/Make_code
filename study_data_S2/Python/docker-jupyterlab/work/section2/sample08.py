@@ -7,5 +7,6 @@ df = pd.DataFrame({
 })
 
 # 月ごとの売上合計
-monthly_sales = df.resample("D", on="date")["sales"].sum()
+monthly_sales = df.resample("M", on="date")["sales"].sum()
 print(monthly_sales)
+print(df)
