@@ -1,4 +1,5 @@
 # SQLのメモ
+- ### [publishについて](##publish)
 
 ## CHAPTER 1
 
@@ -507,3 +508,244 @@ FROM
 ROLLBACK;
 ```
 
+## テーブル作成クエリの作り方
+```sql
+CREATE TABLE
+    quest
+    (
+        id INT AUTO_INCREMENT, -- AUTO_INCREMENTでオート版バー型にできる
+        name VARCHAR(100) NOT NULL, -- VARCHARで何文字までか指定
+        name_kana VARCHAR(255) NOT NULL, -- NOT NULLでNULLの格納を禁止する
+        sex VARCHAR(5) NOT NULL,
+        prefecture VARCHAR(10) NOT NULL,
+        age INT DEFAULT 0,
+        answer1 INT NULL,
+        answer2 TEXT NULL,
+        aswered DATETIME NOT NULL,
+        PRIMARY KEY (id) -- ここで主キーは何かを設定する
+    )
+;
+```
+```主キーの別の書き方```
+```sql
+id INT AUTO_INCREMENT PRIMARY KEY --最初から一行目に着けておく
+```
+
+## テーブルの消し方
+### DROPコマンドでテーブルを削除できる
+```sql
+DROP TABLE テーブル名;
+```
+
+## 情報の出力
+### データベース一覧を表示
+```sql
+SHOW DATABASES;
+```
+### テーブル一覧を表示
+```sql
+SHOW TABLES;
+```
+### そのテーブルのフィールドと必要情報を一覧表示する
+```sql
+SHOW COLUMNS FROM テーブル名;
+```
+
+## インデックス
+### 検索効率を向上させるための仕組み
+### 主キーを基準にするのではなく、データとなるフィールドの名前や日付を降順や昇順にすることによって、フルスキャンせずにレコードを検索することができる
+```sql
+CREATE INDEX
+    pub_date --publish_dateが主キーになるように変更をかけたインデックスと、publish_dateが主キーになるように変更をかけた二つのインデックスが作られる。
+ON
+    books
+    (
+        publish, 
+        publish_date
+    )
+;
+```
+
+### どんな仕組みなのか？
+```sql
+SELECT
+    *
+FROM
+    books
+WHERE
+    publish = '翔泳社'　--ここではpublishが翔泳社になっているので->
+;
+
+-- 翔泳社が検索されるとき、主キー（isbn）をもとに、検索がかけられている。しかし、上のCREATE INDEXでインデックスを作成しておくことで、publishを主キーとするテーブルが裏に作成され、そのテーブルを上のSELECTクエリが認識して扱う。その際に、直接publishを主キーとしているので、元のbooksテーブルを使うよりも早くなる
+```
+
+### どんなインデックスが裏に存在しているのか確認する方法
+```sql
+SHOW INDEX FROM テーブル名
+```
+
+### インデックスが使われないとき（自動認識される）
+- ### IS NULL, IS NOT NULL, <>, LIKEなどの演算子を使うとき
+- ### インデックス列に対して演算をしている
+        ```sql
+        -- これはあり、右側で演算を行えば通る
+        price < 3000 * 1.05
+        ```
+- ### 複合インデックスの場合。そしてインデックス列がWHERE文で対象となっていない場合。
+
+## ALTER テーブル
+### テーブルを変更更新してくれる機能。主に既存のテーブルにフィールドを追加したいときに使う。デフォルトはNULL
+```sql
+ALTER TABLE            --ここで対象となるテーブル指定
+    quest
+ADD                    --どんなフィールドを追加するか
+    last_update DATETIME -- DATETIMEはデータ型
+AFTER                  --どのフィールドの後ろに追加するか指定
+    answered
+;
+```
+
+### AFTERのところについて
+#### AFTERの部分でもし一番手前にフィールドを作りたい場合、FIRSTを使う
+```sql
+ADD
+    last_update DATETIME
+FIRST
+;
+```
+
+### テーブルも消すことができる
+```sql
+ALTER TABLE
+    quest
+DROP -- ageフィールドを削除することができる
+    age
+;
+```
+
+## 特定の列の制約条件を変更
+### 文字数の制限などの設定を変更する
+#### SQLiteでは制約条件の変更をすることができないため、最初から作り直さないといけない
+```sql
+ALTER TABLE
+    usr
+MODIFY
+    o_address VARCHAR(255) NULL --o_addressはもともとVARCHAR(100)だった
+;
+```
+```実行前```
+
+![実行前](./ドキュメント/images/スクリーンショット%202025-06-24%20102234.png)
+
+```実行後```
+
+![実行後](./ドキュメント/images/スクリーンショット%202025-06-24%20102501.png)
+
+### フィールドの名前を変更する
+```sql
+ALTER TABLE
+    old_name --ここで今までの既存のテーブル名
+RENAME AS
+    new_name --新しく名前変更するテーブル名
+;
+```
+
+<hr>
+<hr>
+
+#  **ここから応用編**
+
+<hr>
+<hr>
+
+## ウィンドウ関数（別名:OLAP関数）
+### データベースを使ってリアルタイムデータ分析を行う処理のこと
+### 例えば、市場分析、財務諸表作成、マネジメント計画作成など、ビジネスの現場でなくてはならないものである
+```sql
+<ウィンドウ関数>OVER (
+    [PARTITION BY <列リスト>]
+    OVER BY <ソート用列リスト> <ASCかDESCか>
+)
+```
+```例文```
+```sql
+-- 順位付け関数を使った例
+SELECT
+    title,
+    price,
+    publish,
+    RANK() OVER (
+        PARTITION BY publish --publish列をグループ化する
+        ORDER BY price DESC --そのグループでpriceの順位(DESC:降順)をつける
+    ) AS 'ランキング'
+FROM
+    books
+;
+```
+#### ※PARTITION BYがなかった場合、すべてのレコードを基準にランキングを付ける
+
+## 順位付けの方法３選
+- ### RANK()
+    ### RANKで出力すれば、データが重複しても順位が一緒になる。そして、5位→7位など重複したレコード分順位を飛ばす
+- ### DENSE_RANK()
+    ### DENSE_RANKで出力すれば、データが重複しても順位が一緒になる。5位→7位などと順位は飛ばされずに、そのまま順位付けをする
+- ### ROW_NUMBER()
+    ### ROW_NUMBERで出力すれば、データが重複したら自動的に順位がつけられる。
+
+### ※ウィンドウ関数はSELECT句以外では使わないようにしよう
+
+
+![RANK付け](./ドキュメント/images/スクリーンショット%202025-06-25%20113446.png)
+
+## 累計の方法
+- ### SUM()
+    ### SUM(フィールド)で出力すれば、指定したフィールドを集計する
+```sql
+SELECT
+    title,
+    price,
+    publish,
+    -- SUMでは引数を渡してあげないといけない。price
+    SUM(price) OVER (ORDER BY price DESC) AS '累計'
+FROM
+    books
+;
+```
+
+## PRECEDINGを使って、直近の3行分の平均値を出す
+### ここ最近の調子的なものを把握するのに便利
+```sql
+-- AVGを使った集計と、PRECEDINGを使った例
+SELECT
+    title,
+    price,
+    publish,
+    SUM(price) OVER (ORDER BY price DESC) AS '累計',
+    AVG(price) OVER (ORDER BY price DESC
+                      ROWS 2 PRECEDING) AS '現在の平均'
+FROM
+    books
+;
+```
+![PRECEDINGの仕組み](./ドキュメント/images/スクリーンショット%202025-06-25%20115430.png)
+### FOLLOWINGを利用する
+#### 自分より一つ前、自分、自分より一つ先を集計対象とする
+```sql
+-- FOLLOWINGを使った例
+SELECT
+    title,
+    price,
+    publish,
+    SUM(price) OVER (ORDER BY price DESC) AS '累計',
+    AVG(price) OVER (ORDER BY price DESC
+                      ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS '移動平均'
+    -- ROWS BETWEEN ここから PRECEDING AND ここまで FOLLOWINGみたいな書き方で、ここから～ここまでの平均をとる。BETWEENがカレントレコードからどこまで前か、FOLLOWINGがカレントレコードからどこまで先かを表している
+FROM
+    books
+;
+```
+
+
+## ウィンドウ関数一覧
+- ### 集約関数(SUM, AVG, COUNT, MAX, MIN)など
+- ### RANK, DENSE_RANK, ROW_NUMBERなど
