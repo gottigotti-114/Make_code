@@ -926,14 +926,14 @@ user.save
     ```
   - ### 数値チェック
     ```rb
-    validates :フィールド名, numericality: チェック項目
+    validates :フィールド名, numericality: { チェック項目 }
       # チェック項目
-      :only_integer                   #...整数型か
-      :greater_than 数値              #...数値より大きいか
-      :greater_than_or_equal_tos 数値 #...数値 ... 数値以上か
-      :equal_to 数値                  #...数値と同じか
-      :less_than 数値                 #...数値より小さいか
-      :less_than_equal_to 数値        #...数値以下か
+      only_integer: true             #...整数型か
+      greater_than: 数値             #...数値より大きいか
+      greater_than_or_equal_to: 数値 #...数値 ... 数値以上か
+      equal_to: 数値                  #...数値と同じか
+      less_than: 数値                 #...数値より小さいか
+      less_than_equal_to: 数値        #...数値以下か
     ```
 ## バリデーションの有効性のチェック
 
@@ -986,6 +986,7 @@ user.save
 ```bash
 rails g migration ファイル名
 ```
+### マイグレーションファイルはmigrateの中に追加する
 #### ※マイグレーションファイルのファイル名は規約によってつける
 ```rb
 作業_作業内容_to_テーブル名_フィールド
@@ -995,6 +996,71 @@ rails g migration ファイル名
 # usersテーブルのemailフィールドにindexを追加するというコマンド
 rails g migration add_index_to_users_email
 ```
+
+
+## 練習問題
+### books_appというプロジェクトを作成しなさい
+- ### 1.下記コントローラを作成
+    ```
+    authorsコントローラー
+    ```
+- ### 2.下記ビューを作成
+    ```
+    menu
+    ```
+- ### 3.menu.html.erbを下記のように変更
+    #### ※著者一覧に対しauthorsコントローラのindexに対しリンクを作成
+    ```
+    メニュー
+      著者一覧
+      本一覧
+    ```
+- ### 4.下記ビューを作成
+    ```
+    index
+    ```
+- ### 5.index.html.erbを下記のように変更
+    ```
+    著者一覧
+    ```
+- ### 6.3と5にそれぞれアクセスできるようにする
+- ### 7.以下のテストを作成
+    - #### ルートにアクセスしたら、menuが開く
+    - #### menuの中に著者一覧へのリンクがある
+    - #### 5にアクセスできる
+- ### 8.下記モデルを作成
+    - #### モデル名：book
+    - #### フィールド：name string 必須入力 20字以内
+    - #### フィールド：price integer 整数値チェック
+- ### 9.8に対するテストを作成
+
+## セキュアなパスワードを追加する
+### パスワードなどの機密データは暗号化して保存するのが、一般的になる。この暗号化のことを***ハッシュ化***という。
+
+## パスワードの保存の手順
+- ### 1.パスワードのフィールドを作成する
+- ### 2.仮想フィールドの作成をする
+- ### 3.passwordとpassword_confirmationが同じだったらパスワードのフィールドに保存する
+#### ※新規登録時、二回ほど認証してやるやつ、password_confirmationに二回目を入力して、passwordとpassword_confirmationをぶつけて一緒だったら、パスワードを登録できるという仕組み
+```bash
+# パスワード用のフィールドを、追加する。
+rails g migration add_password_digest_to_users password_digest:string
+```
+
+## パスワードの作成
+### 1.モデルに
+```rb
+has_secure_password
+```
+### を記述。仮想的なフィールドのpasswordとpassword_confirmationが作成される。
+### 2.gemにbcryptを追加
+```Gemfile```
+```rb
+gem "bcrypt","3.1.18"
+```
+### ハッシュ化用gem
+
+
 
 ## Rails豆知識
 - ### \<em>タグは斜めにする

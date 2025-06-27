@@ -1479,3 +1479,17 @@ str2 = "abbbbbc"
 if /ab{4}c/ =~ str ... True
 if /ab{3,6}c/ =~ str ... True
 if /ab{,4}c/ =~ str2 ... False
+```
+## 位置の指定
+- ### ^ ... 正規表現開始の/のすぐ後に書くことによって行の先頭を表す
+```rb
+# abc abcd abcc = True
+# cabc dab aabc = False
+if /^abc/ =~ str
+```
+- ### $ ... 正規表現終了の/の直前に書くことで行末を表す。
+```rb
+# dabc eeabc dfabc = True
+# abcd aacb bc = False
+if /abc$/ =~ str
+```
