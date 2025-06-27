@@ -596,3 +596,34 @@ monthly_sales = df.resample("M", on="date")["sales"].sum()
 print(monthly_sales)
 ```
 
+## DataFrameの応用
+### グループごとの統計集計
+```py
+# カテゴリごとにmean(平均)sum(合計)max(最大値)count(件数)を一覧表示
+df.groupby("カテゴリ")["売上"].agg(["mean","sum","max","count"])
+```
+
+### 行や列の入れ替え
+```py
+df.T
+```
+
+### 重複エラーについて
+#### pivotテーブルを使えば解決する
+```サンプルcsvデータ```
+```csv
+日付,商品,売上
+2024-07-01,A,1000
+2024-07-01,A,1200
+2024-07-01,B,1500
+2024-07-02,A,1100
+2024-07-02,B,1700
+2024-07-02,B,1300
+```
+```python
+# 日付ごとに商品をグループ化し、売り上げの総計を求める
+# ちなみに、aggはaggregate(集約する)という意味で使われている
+pivot_tabled = df.pivot_table(index="日付", columns="商品", values="売上", aggfunc="sum")
+print(pivot_tabled)
+```
+
