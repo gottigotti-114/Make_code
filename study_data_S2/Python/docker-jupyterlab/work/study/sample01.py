@@ -15,10 +15,11 @@ class NewData:
         print( self.df )
     
     def info2( self, group, field ):
-        df = self.df.groupby(group)[field].sum()
+        df = self.df.groupby(group)[field].sum().reset_index()
         print(df)
 
 data = NewData("./data/Sales_data.csv",pd)
 
 # 製品(Product)をグループ化して、値段(Price)の集計を求める
 data.info2("Product","Price")
+
