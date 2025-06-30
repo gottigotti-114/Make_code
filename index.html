@@ -6,8 +6,47 @@
     <title>学習データの一覧</title>
 </head>
 <body>
+
     <header>
-        <h1>Gottiが学習してきたデータを確認するためのHP</h1>
+        <h1 class="h_header">Gottiが学習してきたデータを確認するためのHP</h1>
+        <nav>
+            <ul>
+                <li><a href="pages/ruby.html">Ruby</a></li>
+                <li><a href="pages/java.html">Java</a></li>
+                <li><a href="pages/rails.html">Rails</a></li>
+                <li><a href="pages/sql.html">SQL</a></li>
+                <li><a href="pages/server.html">サーバー構築</a></li>
+                <li><a href="pages/kaihatsu.html">開発基礎</a></li>
+                <li><a href="pages/python.html">Python</a></li>
+            </ul>
+        </nav>
     </header>
+    <main>
+
+    </main>
+    <footer>
+  <p>sample.txt の最終更新日：<span id="modified-date">読み込み中...</span></p>
+
+  <script>
+    async function fetchLastModified(url) {
+      try {
+        const response = await fetch(url, { method: "HEAD" });
+        const lastModified = response.headers.get("Last-Modified");
+        if (lastModified) {
+          const date = new Date(lastModified);
+          const formatted = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+          document.getElementById("modified-date").textContent = formatted;
+        } else {
+          document.getElementById("modified-date").textContent = "取得できませんでした";
+        }
+      } catch (error) {
+        document.getElementById("modified-date").textContent = "エラーが発生しました";
+        console.error("取得エラー:", error);
+      }
+    }
+
+    fetchLastModified("Pages/sample.txt");
+  </script>
+    </footer>
 </body>
 </html>
