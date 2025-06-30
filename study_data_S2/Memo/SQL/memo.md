@@ -749,3 +749,81 @@ FROM
 ## ウィンドウ関数一覧
 - ### 集約関数(SUM, AVG, COUNT, MAX, MIN)など
 - ### RANK, DENSE_RANK, ROW_NUMBERなど
+
+## ユーザの追加
+### hogeというユーザを作成
+```sql
+-- hogeというユーザをパスワード「abcdefg」で作成する
+CREATE USER hoge IDENTIFIED BY 'abcdefg';
+```
+### ユーザの一覧を表示するには
+```sql
+SELECT
+    User
+FROM
+    mysql.user
+;
+```
+### 権限を与える
+```sql
+-- workbookから始まるテーブルへのSELECT権限を与えることができる
+GRANT SELECT ON workbook.* TO hoge;
+```
+
+### 権限を削除
+```sql
+REVOKE SELECT ON workbook.* FROM hoge;
+```
+
+### アカウントを削除
+```sql
+DROP USER hoge;
+```
+
+## MySQLの認証方式について
+### 今までmysql_native_passwordという認証方式を使っていた。
+### 認証方式とは・パスワードの認証方式をどのようにするのか？
+- ### caching_sha2_passwordは、MySQL8.0のデフォルトの認証方式
+- ### mysql_native_passwordは、古い方式。セキュリティが低く、MySQL8.4からは禁止されている
+```sql
+-- ユーザにどの認証方式を使ってもらうかを指定する方法
+-- これは中でハッシュ化して保存されているからおすすめ
+CREATE USER hoge IDENTIFIED WITH caching_sha2_password BY 'abcdefg'
+```
+
+## パスワードに有効期限を設定する
+### hogeアカウントのパスワードの有効期限を90日に設定
+```sql
+ALTER USER hoge PASSWORD EXPIRE INTERVAL 90 DAY;
+```
+### hogeアカウントのパスワードを無期限に設定
+```sql
+ALTER USER hoge PASSWORD EXPIRE NEVER;
+```
+### 強制的にパスワードを期限切れにする
+```sql
+ALTER USER hoge PASSWORD EXPIRE;
+```
+
+## ロールについて
+### ロールとは、ユーザの設定が含まれたユーザのようなもの。イメージするといえば、いろんな初期設定がされている初期スキンみたいなもの
+```sql
+CREATE ROLE app_user; --app_userというロールを作成
+GRANT SELECT ON workbook.* TO app_user; --ロールにworkbook系のselect権限を付与する
+GRANT INSERT ON workbook.books TO app_user; -- ロールにbooksの挿入権限を付与する
+CREATE ROLE app_dev; -- app_devというロールを作成する
+GRANT ALL ON workbook.* TO app_dev; -- workbookの全ての権限(パーミッション)をapp_devに付与する
+
+-- user1にapp_userロールの設定を着させてあげる
+GRANT app_user TO user1;
+
+-- app_userの設定されたロールを有効化する
+SET ROLE app_user;
+
+-- app_userに設定されたロールを無効にし、
+SET ROLE app_dev;
+
+-- ロールを完全に無効化する
+SET ROLE NONE;
+```
+
