@@ -1059,12 +1059,169 @@ has_secure_password
 gem "bcrypt","3.1.18"
 ```
 ### ハッシュ化用gem
+```bash
+rails db:migrate version=0 RAILS_ENV=test
+rails db:migrate RAILS_ENV=test
+```
 
+## Railsのデバッグ
+### railsのデバッグ方法として二つのやり方がある。
+- ### 1.debugメソッドを使う
+  ```
+  Viewやコントローラーなどで
+    debug（変数名）
+  とする
+  ```
+  ```app/views/application.html.erb```
+  ```ruby
+    <body>
+      <%= render "layouts/header" %>
+      <div class="container">
+        <%= yield %>
+        <%= render "layouts/footer" %>
+        <%= debug(params) if Rails.env.development? %> <- 開発が動いていたら、debugを出力しますよ。
+      </div>
+    </body>
+  ```
 
+- ### 2.pメソッドを使い、コンソールに出力
+  ```
+  viewやコントローラなどで
+    p 変数名
+  とする
+  コンソール上に出力する
+  ```
+  ```controller/static_pages_controller.rb```
+  ```rb
+  # pメソッドはデバッグ用に使われる出力。ここで書いた内容はコンソールに出力される。
+    def about
+    p "-----------------------------------"
+    p "This is the about page."
+    p "-----------------------------------"
+  end
+  ```
+- ### 3.debuggerメソッドを使う
+  ```
+  viewやコントローラなどで
+    debugger
+  とする。
+  デバッグ用のコンソールが立ち上がり、そこで変数などを確認できる。
+  rails sをしたコンソールに(rdbg)と表示され、そこで@user.nameとかと書くと、データが表示される。
+  Ctrl + d で抜けられるが、サーバーが止まる。
+  ```
+
+## routes.ebのresourcesメソッドについて
+### routes.rbに
+```rb
+resources :コントローラ名
+```
+### とすることで、以下のルーティングが設定される（get "/○○"の設定がいっぱいされるということ）
+- ### /コントローラ名 ... indexアクションを呼び出す。一覧用
+- ### /コントローラ名/ID番号 ... showアクションを呼び出す。詳細表示用
+- ### /コントローラ名/new ... newアクションを呼び出す。新規登録用
+- ### /コントローラ名/ID番号/edit ... editアクションを呼び出す。修正用
+- ### post/コントローラ名 ... createアクションを呼び出す。登録処理
+- ### patch /コントローラ名/ID番号 ... updateアクションを呼び出す。更新処理
+- ### delete /コントローラ名/ID番号 ... destroyアクションを呼び出す。削除処理
+
+### ※resourcesを付けるうえで必要なこと
+#### コントローラとビューにshow設定が必要になる（コントローラでshowを設定して、show.html.erbを実行する）
+```/controller/users_controller.rb```
+```rb
+class UsersController < ApplicationController
+  def new
+  end
+
+  def show
+    @user = User.find(params[:id]) #paramsはリクエストパラメータからidをもらってくる処理。URLで指定するときに、
+  end
+end
+```
+
+## form_withについて
+### railsでフォームを作成するときはform_withメソッドを使う
+```rb
+form_with(model: インスタンス名) do |変数|
+  変数.フォームコントローラ名(:インスタンスのプロパティ[,オプション])
+
+  変数.submit "ボタンに表示するテキスト" #submitを押せば、controllerのcreateメソッドが起動する
+end
+```
+### アクセス方法
+```
+フォームに入力された値は
+  params[モデル名][:インスタンスのプロパティ]
+でアクセスできる
+```
+
+## 主なフォームコントローラ名
+### .label :プロパティ[,表示される文字列] ... ラベルの表示
+### .text_field :プロパティ[,オプション] ... テキストフィールドの表示
+### .text_area :プロパティ[,オプション] ... テキストエリアの表示
+### .select :プロパティ,表示する内容の配列 ... セレクトボックスの表示
+### .submit :プロパティ,表示する文字列 ... 送信ボタンの表示
+### .button :プロパティ,表示する内容の配列 ... ボタンの表示
+### check_box :プロパティ ... チェックボックスの表示
+### radio_button :プロパティ,プロパティに入れる値 ... ラジオボタンの表示
+### collection_select :プロパティ,配列,プロパティに入れる値,表示する内容 ... コレクションセレクトの表示
+
+## コード例
+```rb
+<div class="row">
+    <div class="col-md-6 colmd-offset-3">
+        <%= form_with(model: @user) do |f| %>
+            <%= f.label :name, "名前" %> # :nameとは何なのか？これは、<label></label>で囲んだ時、ラベルを押したらテキストフィールドにカーソルが飛ぶという設定を依然したと思う。そのこと
+            <%= f.text_field :name %>
+
+            <%= f.submit "データ送信" %>
+        <% end %>
+    </div>
+</div>
+```
 
 ## Rails豆知識
 - ### \<em>タグは斜めにする
 - ### get送信はURL事態に情報が埋め込まれている
 - ### routes.rbにget 'static_pages(アプリの名前)/about(コントローラ名)'を作ると、自動的にstatic_pages_about_urlのような変数が自動的に作成される
 - ### resources :authors(コントローラ名)としたらcreateやupdateなど自動的に作られる。
+- ### gravatarについて
+```rb
+# gravatarとは、メールアドレスをハッシュ化した値を使って、グローバルに使えるアイコン画像を提供してくれるサービス。
+# <show.html.erb>
+<h1><%= gravatar_for @user %></h1>
+
+# </app/helpers/users_helper.rb>
+module UsersHelper
+  # 引数で与えられたユーザーのGravatar画像を返す
+  def gravatar_for(user)
+    gravatar_id  = Digest::MD5::hexdigest(user.email.downcase) # ここでメールアドレスを小文字にしてMD5という種類のハッシュ化を行う
+    gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}" #ハッシュ化した値をURLに挟んであげる
+    image_tag(gravatar_url, alt: user.name, class: "gravatar") # URLを参照してアイコンを取得して、表示する
+  end
+end
+```
+## Strong Paramaters
+### データを登録するとき、各フィールドのデータがきちんと入っているかを調べるもの。
+### データを登録する前にチェックを行うことで、不正なデータが無いか等をチェックできる。
+```/controller/○○.rbのcreateメソッド```
+```rb
+params. require(:モデル名)=permit(:受け取るフィールド, :受け取るフィールド...)
+```
+```/controller/users_controller.rb#create```
+```rb
+  def create
+    @user = User.new(user_params) #下のメソッドを実行
+    if @user.save
+    else
+      render 'new', status: :unprocessable_entity
+    end
+  end
+private
+  def user_params
+    # nameとemailとpasswordとpassword_confirmationにデータが入っていないと次にいけないような設定
+    params.require(:user).permit(:name, :email, :password, :password_confirmation) 
+  end
+
+end
+```
 
