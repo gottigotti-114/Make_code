@@ -1,0 +1,61 @@
+/* styles.css */
+*{
+    background-color: #666666;
+}
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 2px;
+    width: 416px;
+    margin: 20px auto;
+    background-color: #333333;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cell.black {
+    background-color: black;
+}
+
+.cell.white {
+    background-color: white;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#skipButton,#resetButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0078D7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#skipButton:hover {
+    background-color: #005A9E;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.cell.highlight {
+    background-color: yellow; /* ハイライトを黄色で表示 */
+    opacity: 0.8; /* 半透明で視覚的に目立たせる */
+}
