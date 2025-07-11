@@ -1225,3 +1225,166 @@ private
 end
 ```
 
+## sessionとcookie
+### データベースを使わずにデータを一時的に保存するためにセッションとクッキーがある。どちらもweb系システムではよく使われる仕組みになる
+- ### cookie ... ブラウザに一時保存されるデータ。主にユーザーIDやパスワードなどが保存される。ブラウザ上にデータがあるので基本的に自由に登録、修正削除ができる。比較的、小容量のデータに使用される。
+- ### session ... サーバーに一時保存されるデータ。主に持続情報やページを跨いだデータ保存に使用される。基本的に短時間のデータ保存に使用される。
+```
+補足）
+サイトログイン時に、メールアドレスとパスワードが自動入力されるのはCookieが働いているから。メールアドレスがCookieのほうに保存されているから、判別することができる。
+そしてsessionは、やや少しの間データを保存しておける。例えば、アンケートフォームで書いた内容が少しの間消えなかったりがある。
+```
+
+## セッションの使い方
+```rb
+session[:データ名]
+# でアクセスできる。
+
+# データを代入するときは
+session[:データ名] = 値
+
+# データを参照するときは
+session[:データ名]
+# とする
+```
+
+## sessionsコントローラとnewというviewを作成
+### form_withのmodelオプションを使うことでnewだったらcreate、editだったらupdateのメソッドにsubmitをクリックしたときは飛ばされる。
+### 特定のurlに飛ばしたいときはurlオプションを使う
+```rb
+form_with(@model:インスタンス名,url: "post送信をするURL") # ※modelは省略可
+```
+### とする
+```
+例えば(view/new.html.erb)でボタンを押せばcreate実行
+     (view/edit.html.erb)でボタンを押せばupdate実行をいままで自動で飛ばされていた
+```
+```例```
+```rb
+<%= form_with(url: login_path, scope: :session) do |f| %> #login_pathに飛ばすよ。ということ。sessionを使ったフォームにしますよということ。
+
+  <%= f.label :email %>
+  <%= f.email_field :email, class: 'form-control' %>
+
+  <%= f.label :password %>
+  <%= f.password_field :password, class: 'form-control' %>
+
+  <%= f.submit "Log in", class: "btn btn-primary" %>
+<% end %>
+```
+## sessionが実際のhtmlでつかわれている様子
+### 以下はEmailとpasswordでログインする画面
+![htmlでsession](./スクリーンショット%202025-07-08%20165109.png)
+### htmlのformタグ内では、テキストフィールドにsession[]と書かれている。これはこのsessionに保存する役割を果たす
+![htmlでsession](./スクリーンショット%202025-07-08%20165207.png)
+
+## formとparamsの関係
+### form_withの中にinputタグを使うと、htmlソースに
+```rb
+モデル名[フィールド名]
+```
+### という名前の入力用のフィールドが作成される
+### submitボタンで送信したときには、コントローラ内で
+```rb
+params[:モデル名][:フィールド名]
+```
+### でアクセスできる
+
+## loginが二つあるとどうなるのか
+### route.rbに以下の設定がある
+```rb
+  
+```
+### createメソッドが起動される
+```sessions_controller.rb```
+```rb
+# createメソッド
+def create
+    p "---------------------" # ここではsubmitを押されたとき、記述されたemailなどがコンソールに表示
+    p params[:session][:email]
+
+    # downcaseは小文字化
+    user = User.find_by(email: params[:session][:email].downcase) # ここでは
+
+    # authenticateはパスワードを暗号化したもの
+    if user && user.authenticate(params[:session][:password]) #ここの条件分岐は&&の左側のオペランドを先に照合し、nullじゃなかったら右側のオペランド式を実行する
+
+    # ログイン
+
+    else
+    # ここではもしも上の照合で引っかからなかった（ユーザーが見つからなかった）場合に、newへ飛ばして新規登録させる画面
+      render "new",status: :unprocessable_entity
+    end
+  end
+```
+
+## flashメッセージとは
+### 一時的に表示したいメッセージのこと。ログインに成功した/失敗したやデータの登録の成功などを画面の上や下に表示する。
+### 通常は一回だけ表示した後、自動的に削除される
+
+## flashメッセージ使い方
+### コントローラなどで
+```rb
+flash[:キー] = メッセージ
+```
+### とする。
+### 表示するときは
+```rb
+flash.each.do | キー用変数, メッセージ用変数 |
+```
+### で受け取りメッセージを表示する
+### キーには主に
+- ### :notice ... 成功時のメッセージ
+- ### :aleat ... 失敗したときのメッセージ
+
+## セッション固定攻撃
+### セッションが長い間サーバーに保存されていたら、セッション取得を使ってデータを取得できてしまう
+
+## findとfind_byの違い
+- ### User.find(1)の場合、データが見つかればそのまま続けれるが、データが無かったらエラーになってシステムが終了してしまう
+- ### User.find_by(1)の場合、データが見つかればそのまま続けるし、データが無くてもシステム終了せず、nilを返す
+
+## current_user(セッションが存在している場合のユーザーを返すメソッド)
+### ヘルパーとして定義してやることで、自分のユーザを返すメソッドをいろんなところで使える
+```rb
+module SessionsHelper
+  def log_in(user) # ユーザを受け取り、セッションにidを格納しておく
+    session[:user_id] = user.id
+  end
+  def current_user # セッションから現在のユーザに関する情報を取得し、返り値として返す
+    @current_user ||=User.find_by(id: session[:user_id]) if session[:user_id]
+  end
+    
+end
+```
+
+## 練習問題
+```
+rental_appを作成
+  1.以下の条件でスキャフォールドを作成
+    モデル名：book
+    フィールド名：title string
+                 price integer
+  
+  2.以下の条件でモデルを作成
+    モデル名：rental
+    フィールド名：book_id integer
+                 hakusu  integer
+
+  3.rentalモデルに書きバリデーションを作成
+    book_id 必須チェック
+    hakusu  必須チェック
+
+  4.3に対するモデルテストを作成
+
+  5.コントローラrentalを作成
+
+  6.new.html.erbを作成
+    submitボタンを押すとcreateに飛び、rentalを登録できるようにする
+
+  7.統合テストrentalを作成し、下記のチェックを行う
+    1.rental/newに対して、下記のチェックを行う
+      rental/newテンプレートが使用される
+    2.すべてのフィールドを空で登録すると登録できず
+      rental/newテンプレートを使った表示を行う
+      

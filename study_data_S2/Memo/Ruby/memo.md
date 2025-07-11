@@ -1518,3 +1518,98 @@ if /abc$/ =~ str
 変数 = /パターン/
 変数 = %r{パターン} #※{}は()や[]、!!、||などに変更可
 ```
+
+## パターンマッチについて
+### 正規表現を用いて、パターンマッチしたかのチェックには主に下記が使用される
+```rb
+パターン =~ 文字列 ... 最初にパターンマッチした場所を返す
+パターン === 文字列 ... 正規表現にマッチしたかを返す（true/false）
+パターン.match(文字列) ... パターンマッチ前、パターンマッチ部分、パターンマッチ後等を返す
+```
+
+## matchメソッドについて
+### matchメソッドで取得したデータは以下のデータが入っている
+```
+[0] ... マッチした部分が入っている
+[n] ... n番目の{}にマッチした部分を返す
+pre_match ... マッチした部分より前
+post_match ... マッチした部分より後
+```
+### matchを使う場合、ブロックを使うときもある
+```rb
+パターン.match(文字列) do |変数|
+  変数を使った処理
+end
+```
+
+## 例文
+```rb
+regex = /\d{2}-\d{4}/
+
+print "文字列："
+str = gets.chomp
+p regex.match(str)
+```
+```実行結果```
+```cmd
+PS C:\Users\student\rubysrc\sample31> ruby Main.rb
+文字列：12345
+nil
+PS C:\Users\student\rubysrc\sample31> ruby Main.rb
+文字列：12-2345
+#<MatchData "12-2345">   ...マッチしたからこれが入っている
+```
+
+### 配列ごとに何が入っているかイメージする
+```rb
+regex = /(\d{2})-(\d{4})/ #()で囲った部分を単位として配列の要素にマッチを記述する
+
+print "文字列："
+str2 = gets.chomp
+result = regex.match(str2)
+p result[0]
+p result[1]
+p result[2]
+p result.pre_match
+p result.post_match
+```
+```実行結果```
+```bash
+PS C:\Users\student\rubysrc\sample31> ruby Main.rb
+文字列：12345-45-6789-2345
+"45-6789"
+"45"
+"6789"
+"12345-"
+"-2345"
+PS C:\Users\student\rubysrc\sample31>
+```
+```イメージ```
+```
+12345- 45-6789 -2345
+| pre | match | post |
+```
+
+### パターンマッチする箇所が何か所かある場合、最長の部分にマッチする
+```rb
+result = /a.+z/.match("abczabczabcz") # aの次に任意の文字列が1文字以上あり、次がzである
+p result[0]
+```
+```実行結果```
+```bash
+"abczabczabcz"
+# abcz と abcz と abcz と abczabcz と abczabcz と abczabczabczが存在する
+```
+
+## 正規表現のオプション
+### 正規表現には様々なオプションがある
+
+- ### i ... 大文字小文字を区別しない
+- ### x ... 空白やコメントを含めない
+- ### m ... 任意の一文字に改行を含める
+
+### それぞれ正規表現の直後に指定する
+```rb
+# /パターン/オプション
+/[a-z]{4}/
+```
