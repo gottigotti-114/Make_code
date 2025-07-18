@@ -749,3 +749,257 @@ FROM
 ## ウィンドウ関数一覧
 - ### 集約関数(SUM, AVG, COUNT, MAX, MIN)など
 - ### RANK, DENSE_RANK, ROW_NUMBERなど
+
+## ユーザの追加
+### hogeというユーザを作成
+```sql
+-- hogeというユーザをパスワード「abcdefg」で作成する
+CREATE USER hoge IDENTIFIED BY 'abcdefg';
+```
+### ユーザの一覧を表示するには
+```sql
+SELECT
+    User
+FROM
+    mysql.user
+;
+```
+### 権限を与える
+```sql
+-- workbookから始まるテーブルへのSELECT権限を与えることができる
+GRANT SELECT ON workbook.* TO hoge;
+```
+
+### 権限を削除
+```sql
+REVOKE SELECT ON workbook.* FROM hoge;
+```
+
+### アカウントを削除
+```sql
+DROP USER hoge;
+```
+
+## MySQLの認証方式について
+### 今までmysql_native_passwordという認証方式を使っていた。
+### 認証方式とは・パスワードの認証方式をどのようにするのか？
+- ### caching_sha2_passwordは、MySQL8.0のデフォルトの認証方式
+- ### mysql_native_passwordは、古い方式。セキュリティが低く、MySQL8.4からは禁止されている
+```sql
+-- ユーザにどの認証方式を使ってもらうかを指定する方法
+-- これは中でハッシュ化して保存されているからおすすめ
+CREATE USER hoge IDENTIFIED WITH caching_sha2_password BY 'abcdefg'
+```
+
+## パスワードに有効期限を設定する
+### hogeアカウントのパスワードの有効期限を90日に設定
+```sql
+ALTER USER hoge PASSWORD EXPIRE INTERVAL 90 DAY;
+```
+### hogeアカウントのパスワードを無期限に設定
+```sql
+ALTER USER hoge PASSWORD EXPIRE NEVER;
+```
+### 強制的にパスワードを期限切れにする
+```sql
+ALTER USER hoge PASSWORD EXPIRE;
+```
+
+## ロールについて
+### ロールとは、ユーザの設定が含まれたユーザのようなもの。イメージするといえば、いろんな初期設定がされている初期スキンみたいなもの
+```sql
+CREATE ROLE app_user; --app_userというロールを作成
+GRANT SELECT ON workbook.* TO app_user; --ロールにworkbook系のselect権限を付与する
+GRANT INSERT ON workbook.books TO app_user; -- ロールにbooksの挿入権限を付与する
+CREATE ROLE app_dev; -- app_devというロールを作成する
+GRANT ALL ON workbook.* TO app_dev; -- workbookの全ての権限(パーミッション)をapp_devに付与する
+
+-- user1にapp_userロールの設定を着させてあげる
+GRANT app_user TO user1;
+
+-- app_userの設定されたロールを有効化する
+SET ROLE app_user;
+
+-- app_userに設定されたロールを無効にし、
+SET ROLE app_dev;
+
+-- ロールを完全に無効化する
+SET ROLE NONE;
+```
+
+## ボイスコッド正規系（第三正規系のさらに上）
+### 第三を超える正規系のことを高次正規系という。
+### 非キーから主キーへの関数従属がある。例：チーム補佐（123W）といえば、チーム（001）だよね。的なものがあると、それはボイスコッド正規系とは言えないらしい。
+#### つまり、ボイスコッド正規系には、非キーから主キーへの関数従属がないものをいう。
+![ボイスコッド正規系を満たしていないテーブル](./ドキュメント/images/スクリーンショット%202025-07-01%20110726.png)
+
+## ボイスコッド正規系じゃなかったらどんな問題が起きるのか？
+- ### チーム補佐が担当チームを変える場合に複数行の更新が発生する。例：001チームが、チームを変更する場合、そのチーム補佐をレコード単位で一つずつ変えていかないといけなくなる
+- ### 社員がチームに参加するまで、チーム補佐が登録できない
+- ### 社員がチームを外れた場合、レコードを削除すると、チーム補佐がこのチームを担当していたよ～という内容がなくなってしまう。
+
+## ボイスコッド正規系手順
+### 1.テーブルを分離
+#### ※この場合、社員ID(000A)さんの補佐が123Wさんと456Zさんの二人が存在するということになってしまう。
+![テーブル分離](./ドキュメント/images/スクリーンショット%202025-07-01%20112101.png)
+
+### 2.ボイスコッド正規系がここの手順
+#### ※この場合、社員-チーム補佐テーブルに、(000A,0030)というレコードを打つことができる。しかし、そうすると、000Aは補佐123Wが担当しているので000Aはチーム001である。しかし上記のレコードを打つと、000Aの補佐は0030であり、0030は別チーム（002）に所属しているので、000Aは不意に002チームに所属してしまうことになる。
+![テーブルを分解](./ドキュメント/images/スクリーンショット%202025-07-01%20112957.png)
+
+## 第四正規系
+### 1.間に関連エンティティを入れてあげる
+#### ※こうすれば、社員IDひとつがどのチームに所属しているかはっきりさせることができる。このように間で補助をしてくれるテーブルを関連エンティティという
+![関連エンティティ](./ドキュメント/images/スクリーンショット%202025-07-01%20114022.png)
+
+### 2.関連エンティティでの問題
+#### ※この場合、チーム001が002に移動する場合、現実的には可能だが、複数行に対して直さないといけなくなる。
+![問題](./ドキュメント/images/スクリーンショット%202025-07-01%20115431.png)
+
+### 3.第四正規系にする
+![第四正規系](./ドキュメント/images/スクリーンショット%202025-07-01%20120503.png)
+
+## 第五正規系
+### この場合、チーム○○がどの製品を作っているか、シンプル化されていない
+#### ※もしも、チーム001がP3も担当していた場合、ここでは把握できない
+![第四正規系](./ドキュメント/images/スクリーンショット%202025-07-01%20115829.png)
+
+### 分けて、これといえばこれ！という形を作ってあげる（第五正規系）
+![第五正規系](./ドキュメント/images/スクリーンショット%202025-07-01%20120040.png)
+
+## rubyでダミーユーザ
+### 1.gemをインストール
+```bash
+gem install securerandom
+```
+```ダミー作成```
+```rb
+# まず、Fakerをインストールしていない場合は、Gemfileに以下を追加して `bundle install` を実行してください。
+# gem 'faker'
+
+require 'faker'
+require 'securerandom' # パスワードのハッシュ化（簡略版）に利用
+
+# --- Fakerのロケールを日本語に設定 ---
+Faker::Config.locale = 'ja'
+
+# --- テーブル名とカラム名の設定 ---
+# users テーブルに 'address' カラムが追加されていることを想定
+TABLE_NAME = "users"
+COLUMNS = %w[name email password_digest address created_at updated_at]
+
+# --- ヘルパー関数（現在時刻のフォーマット） ---
+def current_mysql_datetime
+  Time.now.strftime('%Y-%m-%d %H:%M:%S')
+end
+
+puts "-- MySQL INSERT Statements for #{TABLE_NAME} table"
+puts "-- Generated on #{current_mysql_datetime}"
+puts ""
+
+# 10人分のダミーデータを生成し、INSERT文を出力
+10.times do |i|
+  # ダミーデータの生成
+  # 日本人の漢字の氏名を生成 (苗字 + 名前)
+  last_name = Faker::Name.last_name # 姓
+  first_name = Faker::Name.first_name # 名
+  name = "#{last_name} #{first_name}" # フルネーム
+
+  # 確実なアルファベットのメールアドレスを生成
+  # Faker::Internet.username はロケールに依存せずアルファベット文字列を生成します。
+  # これに固定のドメインを組み合わせることで、漢字を含まないメールアドレスを保証します。
+  # ユニーク性を確保するため、Faker::Internet.unique を使用します。
+  begin
+    email_username = Faker::Internet.unique.username(specifier: 8..15) # 8〜15文字のランダムなアルファベットユーザー名
+    email_domain = Faker::Internet.domain_name # 例: example.com, test.org など
+    email = "#{email_username}@#{email_domain}"
+  rescue Faker::UniqueGenerator::LimitExceededException
+    # 万が一、ユニークなユーザー名が枯渇した場合のフォールバック
+    email = "fallback_user_#{i}_#{SecureRandom.hex(4)}@example.com"
+  end
+
+  # パスワードは実際のRailsアプリケーションではbcryptなどでハッシュ化されますが、
+  # ここでは簡略化のためにランダムな文字列を生成しています。
+  # 実際の環境では本物のハッシュ化したパスワードを使用してください。
+  password_digest = SecureRandom.hex(10) # 例: ランダムな20文字の16進数文字列
+
+  # 日本の住所を生成 (都道府県、市区町村、番地、建物名など)
+  address = "#{Faker::Address.state}#{Faker::Address.city}#{Faker::Address.street_address} #{Faker::Address.building_number}"
+  # オプションで郵便番号も追加したい場合
+  # address = "〒#{Faker::Address.zip_code} #{Faker::Address.state}#{Faker::Address.city}#{Faker::Address.street_address} #{Faker::Address.building_number}"
+
+  created_at = current_mysql_datetime
+  updated_at = current_mysql_datetime
+
+  # VALUES句の値をエスケープして文字列として準備
+  # MySQLの文字列リテラルはシングルクォートで囲み、内部のシングルクォートはエスケープする必要がある
+  escaped_name = name.gsub("'", "''") # gsubとは、置換メソッドで、左のは、シングルクォートを見つけたときにシングルクォートを二つ付ける処理をしている
+  escaped_email = email.gsub("'", "''")
+  escaped_password_digest = password_digest.gsub("'", "''")
+  escaped_address = address.gsub("'", "''")
+
+  # INSERT文の生成
+  insert_statement = <<-SQL
+INSERT INTO #{TABLE_NAME} (#{COLUMNS.join(', ')})
+VALUES (
+  '#{escaped_name}',
+  '#{escaped_email}',
+  '#{escaped_password_digest}',
+  '#{escaped_address}',
+  '#{created_at}',
+  '#{updated_at}'
+);
+  SQL
+
+  puts insert_statement
+end
+
+puts ""
+puts "-- End of INSERT statements"
+```
+
+## EXPLAINとは
+### クエリの実行計画を確認するためのツール
+```sql
+EXPLAIN SELECT *
+        FROM
+            books
+        WHERE
+            title = "かえるの観察日記"
+        ;
+```
+```
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | books | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   14 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+```
+
+- ### id ... クエリ識別子
+- ### select_type ... クエリの種類(SIMPLE , PRIMARYなど)
+```
+SIMPLE ... サブクエリやUNIONを含まない単純なSELECT文
+PRIMARY ... サブクエリやUNIONを含むSELECT文
+```
+- ### table ... 対象のテーブル名
+- ### pratitions ... 使用されるパーティション
+```
+補足：パーティションとは？
+グループ化される際のキーとなるカラム名のこと
+```
+- ### type ... アクセスの方法(ALL , index, range, refなど)
+```
+ALL ... 最も遅く、片っ端から一行ずつチェックする
+index ... インデックスを使ったフルスキャンをする
+range ... BETWEENなどを使い、特定の範囲だけの行をフルスキャンする
+ref ... indexで複数行を絞り込みする
+```
+
+- ### possible_keys ... クエリで使用可能なインデックス候補
+- ### key ... 実際に使われたインデックス
+- ### key_len ... インデックスの長さ（バイト数）
+- ### ref ... インデックスと比較される値やカラム
+- ### rows ... 処理対象の行数
+- ### filtered ... 絞り込まれた行の全体に対する割合
+- ### Extra ... 補足情報

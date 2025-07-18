@@ -1387,4 +1387,53 @@ rental_appを作成
       rental/newテンプレートが使用される
     2.すべてのフィールドを空で登録すると登録できず
       rental/newテンプレートを使った表示を行う
-      
+```
+## 練習問題
+```
+1. プロジェクトNenpi_appを作成
+rails new Nenpi_app
+
+2. 以下の条件でスキャフォールドしなさい
+   モデル名：car
+   フィールド：name string型
+
+3. 2を利用し以下の車種を登録しなさい
+   ・tanto
+   ・Move
+   ・カローラ
+
+4. 以下の条件でモデルを作成しなさい
+   モデル名：soukou
+   フィールド：car_id integer型
+            ：kyori float型
+
+5. コンソール画面から以下の情報を追加しなさい
+   ・car_id:1
+   ・kyori:20.5
+
+   ・car_id:1
+   ・kyori:15.5
+
+6.以下のモデルを作成しなさい
+   モデル名：kyuyu
+   フィールド：car_id integer
+              kyuyu float
+
+7. 以下のコントローラを作成しなさい
+   コントローラ名:kyuyus
+
+8. 給油情報を新規入力するために仕組みを作成しなさい
+   ※ここでroute.rbで最初は/kyuyus/new , to: "kyuyus#create"としていたが、form_with(model: @kyuyu, url: "kyuyus/create")とすることで、"kyuyus/create"というurlに情報を送ることができ、post "/kyuyus/new"だけでpost送信できるようになる
+
+9. 下記のようなindexページを作成し、新規登録後はこのページを開きなさい
+   車種   給油
+   tanto  15.2
+   tanto  30.0
+   カローラ25.5
+
+10. Nenpiコントローラを作成し以下の表を作成しなさい
+   車種   走行    給油
+   tanto  36.0    45.2
+   Move   0       0
+   カローラ0      25.5
+```
