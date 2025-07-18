@@ -1,9 +1,8 @@
 def binary_sum(a,b)
-    a &&= 1
+    a &&= 1 #aに
     a ||= 0
-    
-    b &&= 1
 
+    b &&= 1
     b ||= 0
 
     return a+b
