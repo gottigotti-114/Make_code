@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @meisai %>
+
+<div>
+  <%= link_to "Edit this meisai", edit_meisai_path(@meisai) %> |
+  <%= link_to "Back to meisais", meisais_path %>
+
+  <%= button_to "Destroy this meisai", @meisai, method: :delete %>
+</div>

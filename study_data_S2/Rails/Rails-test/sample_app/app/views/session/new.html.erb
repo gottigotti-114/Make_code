@@ -1,0 +1,14 @@
+<h1>ログイン画面</h1>
+<%= form_with(model: @user, url: "/session/create") do |f| %>
+ <%= f.label :email, "メールアドレス" %>
+ <%= f.text_field :email %>
+ <br>
+
+ <%= f.label :password, "パスワード" %>
+ <%= f.password_field :password %>
+ <br>
+
+ <%= f.submit "確定" %>
+<% end %>
+
+ <%= link_to "users/new", "新規登録" %>
