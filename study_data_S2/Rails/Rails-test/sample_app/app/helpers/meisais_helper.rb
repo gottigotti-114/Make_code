@@ -1,0 +1,2 @@
+module MeisaisHelper
+end
