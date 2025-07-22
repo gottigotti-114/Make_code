@@ -1,0 +1,11 @@
+<table>
+    <tr>
+        <th>著者</th>
+        <th>カウント数</th>
+    <% @list.each do |l|%>
+    <tr>
+        <td><%= l.name %></td>
+        <td><%= l.count %></td>
+    </tr>
+    <% end %>
+</table>

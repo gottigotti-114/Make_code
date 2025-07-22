@@ -1,0 +1,14 @@
+package review.rv11;
+/*
+ * プラグインハイブリッドカー
+ */
+public class PhevCar extends HybridCar {
+
+	public PhevCar(String maker, String name, int enginePower, int motorPower, int batteryCapacity) {
+		？？？？？
+	}
+	
+	public void charge() {
+		？？？？？
+	}
+}
