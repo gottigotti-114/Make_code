@@ -1,0 +1,24 @@
+package review.rv10;
+/*
+ * 学生クラス
+ */
+public class Student {
+	private String name;	//学生氏名
+	private String no;	//学生番号
+	//コンストラクタ
+	public Student( String name ) {
+		？？？？？
+	}
+	//ゲッター
+	？？？？？？
+		
+	//セッター
+	？？？？？
+		
+	//クラスの文字列表現取得
+	@Override
+	public String toString() {
+		return ？？？？？？？？？？？？;
+	}
+	
+}

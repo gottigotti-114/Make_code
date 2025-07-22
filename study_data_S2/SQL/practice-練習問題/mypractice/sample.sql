@@ -1,0 +1,8 @@
+SELECT
+    *,
+    RANK() OVER (
+        ORDER BY price DESC
+    ) AS 'ílíiÇÃèáà '
+FROM
+    books
+;

@@ -1,0 +1,26 @@
+package review.rv11;
+
+public class CarTester {
+
+	public static void main(String[] args) {
+		Car[] car = new Car[5];
+		car[0]=new Car("トミタ","クラウン",300);
+		car[1]=new Car("月　産","サニー　",100);
+		car[2]=new HybridCar("ホシダ","シビック",150,70,30000);
+		car[3]=new PhevCar("四　菱","アウトサイダー",230,250,30000);
+		car[4]=new CarAb("スベル","インプレッサ",150);
+		for(int i=0 ; i<？？？？？ ;i++) {
+			System.out.println( car[i].？？？？？() );
+			car[i].accele();
+			car[i].？？？？？();
+			if( ？？？？？ PhevCar ) {
+				？？？？？.charge() ;
+			}
+			if( ？？？？？ CarAb ) {
+				？？？？？.autoBrake();
+			}
+		}
+
+	}
+
+}

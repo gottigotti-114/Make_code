@@ -1,0 +1,53 @@
+package review;
+/*
+ * ホテルクラス
+ */
+public class Hotel {
+	private String name;	//ホテル名
+	private int capacity;	//最大収容者数
+	private int number;	//宿泊者数
+	private Guest[] guests;	//宿泊者インスタンス配列
+	//コンストラクタ
+	public Hotel(String name, int capacity ) {
+		？？？？;	//ホテル名を格納
+		？？？？;	//収容人員を格納
+		？？？？;	//宿泊者数に0を格納
+		？？？？;	//最大収容者数分のGuest型配列を生成し、その参照を「宿泊者インスタンス配列」に格納
+	}
+	//ゲッター
+	public String getName() {
+		？？？？;
+	}
+	public int getCapacity() {
+		？？？？;
+	}
+	public int getNumber() {
+		？？？？;
+	}
+	public Guest[] getGuests() {	//同じ値を持つGuestｲﾝｽﾀﾝｽを新たに生成し新しい配列に入れてその参照を返す
+		Guest[] g = new Guest[ capacity ];
+		for( int i=0 ; i<capacity ; i++ ) { g[i] = new Guest( guests[i] ); }
+		return g;
+	}
+	//セッター
+	public void setName( ？？？？ ) {
+		？？？？;
+	}
+	public void setCapacity( ？？？？ ) {
+		？？？？;
+	}
+	public void setNumber( ？？？？ ) {
+		？？？？;
+	}
+	public void setGuests( ？？？？) {
+		？？？？;
+	}
+	//宿泊者追加
+	public void addGuest( ？？？？ ) {
+		Guest g = ？？？？;	//引数と同じ値を持つGestのインスタンスを生成
+		？？？？ = ？？？？;	//宿泊者を配列に追加
+		？？？？;	//宿泊者数をカウントアップ
+		？？？？( "G-" + String.format("%03d",number) );	//宿泊者番号を設定
+	}
+	
+}

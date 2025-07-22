@@ -1,0 +1,16 @@
+package review.rv11;
+
+/*
+ * 自動ブレーキ機能付きガソリン自動車
+ */
+public class CarAb extends Car implements AutoBrake{
+
+	public CarAb(String maker, String name, int enginePower) {
+		？？？？？
+	}
+
+	@Override
+	public void autoBrake() {
+		？？？？？
+	}
+}
