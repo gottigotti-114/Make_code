@@ -1,0 +1,36 @@
+package review;
+/*
+ * 宿泊者クラス
+ */
+public class Guest {
+	private String name;	//宿泊者氏名
+	private String no;	//宿泊者番号
+	//コンストラクタ
+	public Guest( ？？？？ ) {
+		？？？？ = ？？？？;
+	}
+	public Guest( Guest guest ) {
+		this.name = ？？？？;
+		this.no = ？？？？;
+	}
+	//ゲッター
+	public String getName() {
+		？？？？;
+	}
+	public String getNo() {
+		？？？？;
+	}
+	//セッター
+	public void setName(？？？？) {
+		？？？？ = ？？？？;
+	}
+	public void setNo(？？？？) {
+		？？？？ = ？？？？;
+	}
+	//クラスの文字列表現取得
+	@Override
+	public String toString() {
+		return ？？？？;
+	}
+	
+}

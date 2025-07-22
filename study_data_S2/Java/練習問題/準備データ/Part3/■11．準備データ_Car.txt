@@ -1,0 +1,24 @@
+package review.rv11;
+/*
+ * 普通のガソリン自動車
+ */
+public class Car {
+	String maker;	//メーカー
+	String name;	//名前
+	int enginePower;	//エンジン出力
+
+	public Car(String maker, String name, int enginePower) {
+		？？？？？
+	}
+
+	public String getSpec() {
+		return "メーカー："+maker+"　/　名前："+name+"　/　エンジン出力："+enginePower;
+	}
+
+	public void brake() {
+		？？？？？
+	}
+	public void accele() {
+		？？？？？
+	}
+}

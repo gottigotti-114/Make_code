@@ -1,0 +1,27 @@
+package review.rv10;
+/*
+ * 学校クラス
+ */
+public class School {
+	private String name;	//学校名
+	private int capacity;	//定員数
+	private int number;	//学生数
+	private Student[] students;	//学生インスタンス
+	//コンストラクタ
+	public School(String name, int capacity ) {
+		？？？？
+	}
+	//ゲッター
+	？？？？？？
+
+	//セッター
+	？？？？？？
+		
+	//学生追加
+	public void addStudent( Student student) {
+		？？？？？	//学生を配列に追加
+		？？？？？	//学生数をカウントアップ
+		？？？？？	//学生番号を設定
+	}
+	
+}

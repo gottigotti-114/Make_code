@@ -1,0 +1,27 @@
+package review;
+
+/*
+ * ホテルクラスおよび宿泊客クラス テストプログラム
+ */
+public class TestHotel {
+
+	public static void main(String[] args) {
+		Hotel hotel = new Hotel("出雲東急ホテル",500);
+		Guest[] guests = {
+				？？？？,
+				？？？？,
+				？？？？,
+				？？？？,	
+		};		
+		for( ？？？？ ) {
+			？？？？;	//ホテルに宿泊客を追加する
+		}
+		Guest[] guests2 = ？？？？;	//全宿泊客の情報を取得する
+		System.out.println("●ホテルの名前："+？？？？);
+		System.out.println("●取得した宿泊者情報");
+		for( ？？？？ ) {
+			System.out.println( ？？？？ );	//宿泊客の情報を表示する
+		}
+	}
+
+}

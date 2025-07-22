@@ -1,0 +1,7 @@
+package review.rv11;
+/*
+ * 自動ブレーキ機能インターフェース
+ */
+public interface AutoBrake {
+	void autoBrake();	//自動ブレーキON
+}

@@ -1,0 +1,20 @@
+package review;
+
+import java.util.Scanner;
+
+public class Rv8 {
+
+	static void putChars( ？？？？？ ,？？？？？ ) {	//文字cをn個分を横並びに表示するメソッド
+		？？？？？
+	}
+	static void showTriangle( ？？？？？ ) {	//右上直角二等辺三角形を■を使って表示するメソッド
+		？？？？？
+	}
+	public static void main(String[] args) {
+		Scanner stdIn = new Scanner( System.in );
+		System.out.print("2等辺の長さ：");
+		int length = stdIn.nextInt();
+		showTriangle( ？？？？？ );
+	}
+
+}

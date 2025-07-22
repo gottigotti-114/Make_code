@@ -1,0 +1,24 @@
+package review3;
+/*
+ * ハイブリッドカー
+ */
+public class HybridCar extends Car {
+	int moterPower;
+	int batteryCapacity;
+
+	public HybridCar(String maker, String name, int enginePower, int moterPower , int batteryCapacity) {
+		？？？？？
+	}
+
+	@Override
+	public String getSpec() {
+		？？？？？
+	}
+
+	@Override
+	public void brake() {
+		？？？？？
+	}
+	
+	
+}
