@@ -1237,5 +1237,134 @@ touch testdir/test.txt
 chmod u=rw, -+*
 - ### 3.testdir/ls.txtに対してすべてのユーザから書き込み権限は削除（数字は行わない）
 - ### 4.testdir/ls.txtに対してその他ユーザは全て不可にする（数字は使わない）
+```
 
+## 問題
+```
+1.以下の語句について説明しなさい
+    Lan
+    Wan
+    イントラネット
+    プロトコル
+2.OSI参照モデルについて、第一層　物理層から第七層まで何層があるか答えなさい
+3.各ネットワークインターフェースデバイスに割り当てられているアドレスを何アドレスという？
+4.192.168.10.0/30のネットワークには、最大何台のPCが接続できるか？
+5.ネットワークアドレスが異なるネットワークに接続するためのデバイスは何か？
+6.以下のIPv6アドレスを省略するとどうなるか
+「0abc:00ab:ab00:0000:0000:1234:0000:0000」
+7.L3スイッチとルータの違いを述べなさい
+8.TCP/IPとUDP/IPの違いは何か
 
+1-A.
+LanはLocal area networkの略でルータの内部のネットワーク。直接外部とはつながっていないネットワーク
+WanはWorld wide area networkの略で、LANとLANをつなぐネットワーク（インターネットとの違いは接続先がわかっているか）
+イントラネットは、インターネットの仕組みを社内のネットワークに用いるもの。社内専用のネットワーク
+プロトコルは、手順のこと。通信するには相手と同じプロトコルを使う必要がある。
+2-A.
+アプリケーション層
+プレゼンテーション層
+セッション層
+トランスポート層
+ネットワーク層
+データリンク層
+物理層
+3-A.
+MACアドレス
+4-A.
+2
+5-A.
+ルータ
+6-A.
+abc:ab:ab00::1234:0:0
+7-A.
+ルータ：低速、違うプロトコルとも通信できる
+L3スイッチ：告訴句、イーサネット（TCP/IP）のみの接続
+8-A.
+TCPはパケットの並び替えや不達パケットの再送信を行うがUDPは行わない
+9-A.
+TCPはパケットの並び替えや不達パケットの再送信を行うがUDPは行わない
+e-mailなどの正確さが求められる通信はTCP、動画配信などの速さが求められるものはUDPで行う。
+```
+### Linux問題
+```
+1.多くのLinuxサーバがGUIではなくCUIで操作を行う。理由は？
+2.Linuxは３つの系がある。何系か？
+3.サーバーの外観にはラックマウント型などの型がある、他二つは？
+4.次の仕事は何のサーバの仕事か？
+    1)メールの送受信を行う。
+    2)webページを表示する。
+
+1-A.
+グラフィック等の処理に使用されるリソースを処理に回すため
+2-A.
+RedHut系 ... RHEL, RokeyLinux
+Debian系 ... ubuntu, Debian / GNU Linux
+Slack系 ... slack ware
+3-A.
+タワー型、ブレード
+4-A.
+メールサーバ、wwwサーバ
+```
+## 練習問題
+```
+1. testdirの中に空ファイルtest.txtを作成
+    mkdir testdir | touch test.txt
+2. 1のファイルに対し、所有者は読み書き可、所有グループに読込可、
+    その他に読込み実行可に設定（数字は使わない）
+    chmod u=wr,g=r,o=rx testdir/test.txt
+3. testdir/ls.txtに対してすべてのユーザから書き込み権限を削除（数字は使わない）
+    chmod a-w testdir/ls.txt
+4. testdir/ls.txtに対しその他ユーザは全て不可にする（数字は使わない）
+    chmod o-wrx testdir/ls.txt
+
+ホワイトボードを参照して
+1. 2がカレントディレクトリの時のnamed. confの絶対パス
+    A./etc/smdb/named.conf
+2. 2がカレントディレクトリのときのnamed. confの相対パス
+    A.nemed.conf
+3. 4がカレントディレクトリのときのnamed. confの相対パス
+    A. ../../etc/smbd/named.conf
+カレントディレクトリが2としてのコマンドを答えなさい
+4. カレントディレクトリの中身を隠しファイルを含め再帰的に詳細表示しなさい
+    A.ls -alR
+5. カレントディレクトリ内に新規ディレクトリのdir01/dir02を作成しなさい
+    A.mkdir -p dir01/dir02
+6. カレントディレクトリの中にsmbd.confをdir01/dir02にコピー
+    A.cp smdb.conf dir01/dir02
+7. カレントディレクトリの中のsmdb.confを削除
+    A.rm smdb.conf
+8. カレントディレクトリの中のnamed.confをsmdb.confという名前に変更
+    A.mv named.conf smdb.conf
+9. カレントディレクトリ内に新規ファイルtest.txtという名前で空ファイルを作成
+    A.touch test.txt
+10. test.txtファイルの中身を表示
+    A.cat test.txt
+11. カレントディレクトリの絶対パスをtest.txtに出力
+    A.cd >> test.txt
+12. 新規グループtestgroupを作成
+    A. groupadd testgroup
+13. testgroupグループの名前をgrouptestに更新
+    A. groupmod -n grouptest testgroup 
+    
+    ※ここだけ、ファイルの選び方が反対になっている
+
+14. grouptestをプライマリグループに持つtestuserを作成
+    A. useradd -g grouptest
+15. testuserを以下のように変更
+    ユーザ名：usertest
+    プライマリグループ：usertest
+    所属グループ：root、grouptest
+    A. usermod -l usertest -g usertest -G root,grouptest usertest
+
+    -l が変更するユーザ名 ※最後にユーザ名を忘れないように
+
+16. grouptestを削除
+    A. groupdel grouptest
+17. usertestのプライマリグループ、所属グループを確認
+    A. id usertest
+18. 数字を使用し、カレントディレクトリ内のsmdb.confのパーミッションを所有者は全て可、所属グループは書き込み実行可、その他ユーザは読込可に変更
+    A. chmod 734 smdb.conf
+19. カレントディレクトリ内のzone.invalidのパーミッションから全てのユーザから実行権限を削除
+    A. chmod a-1 zone.invalid
+20. カレントディレクトリ内のzone.invalidの所有者をusertest、所有グループをgrouptestに変更
+    A. chown usertest:grouptest zon. invalid

@@ -1437,3 +1437,6 @@ rails new Nenpi_app
    Move   0       0
    カローラ0      25.5
 ```
+
+## 追加
+### has_many :モデル名を今までしていたが、has_manyは複数形になるので、has_many :モデル名sとしないといけない
