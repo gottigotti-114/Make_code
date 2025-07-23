@@ -1,0 +1,644 @@
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='SampleApp'*/[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2025-07-21 14:49:20.475505', '2025-07-21 14:49:20.475509') RETURNING "key" /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Migrating to CreateUsers (20250721110428)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='SampleApp'*/[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "password" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250721110428') RETURNING "version" /*application='SampleApp'*/[0m
+  [1m[36mTRANSACTION (3.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='SampleApp'*/[0m
+Migrating to CreateMenus (20250721110527)
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='SampleApp'*/[0m
+  [1m[35m (2.1ms)[0m  [1m[35mCREATE TABLE "menus" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "price" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250721110527') RETURNING "version" /*application='SampleApp'*/[0m
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='SampleApp'*/[0m
+Migrating to CreateMeisais (20250721110648)
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='SampleApp'*/[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE TABLE "meisais" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "menu_id" integer, "total" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250721110648') RETURNING "version" /*application='SampleApp'*/[0m
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='SampleApp'*/[0m
+Migrating to AddCountToMeisais (20250721143036)
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='SampleApp'*/[0m
+  [1m[35m (3.0ms)[0m  [1m[35mALTER TABLE "meisais" ADD "item_count" integer /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250721143036') RETURNING "version" /*application='SampleApp'*/[0m
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='SampleApp'*/[0m
+Migrating to AddPasswordDigestToUsers (20250721143247)
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='SampleApp'*/[0m
+  [1m[35m (3.5ms)[0m  [1m[35mALTER TABLE "users" ADD "password_digest" varchar /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250721143247') RETURNING "version" /*application='SampleApp'*/[0m
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='SampleApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:02:32 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (2.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Processing by UsersController#new as HTML
+Completed 500 Internal Server Error in 2190ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 66.3ms)
+
+
+  
+ArgumentError (A regular expression or a proc or lambda must be supplied as :with):
+  
+app/models/user.rb:8:in `<class:User>'
+app/models/user.rb:1:in `<main>'
+app/controllers/users_controller.rb:15:in `new'
+Started GET "/favicon.ico" for 127.0.0.1 at 2025-07-21 15:02:37 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:04:37 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/new.html.erb within layouts/application (Duration: 9.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.4ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 754ms (ActiveRecord: 43.3ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <% content_for :title, "New user" %>
+
+<h1>New user</h1>
+
+<%= render "form", user: @user %>
+<br>
+
+<div>
+  <%= #link_to "Back to users", users_path %>
+</div>
+
+)
+Caused by: ActiveSupport::SyntaxErrorProxy (/app/sample_app/app/views/users/new.html.erb:10: syntax error, unexpected '<'
+</div>
+^
+/app/sample_app/app/views/users/new.html.erb:12: unknown regexp options - vw
+...safe_append='<!-- END app/views/users/new.html.erb -->';@out...
+...                         ^~~~~~
+/app/sample_app/app/views/users/new.html.erb:13: unterminated string meets end of file
+          end
+             ^
+)
+
+Information for: ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <% content_for :title, "New user" %>
+
+<h1>New user</h1>
+
+<%= render "form", user: @user %>
+<br>
+
+<div>
+  <%= #link_to "Back to users", users_path %>
+</div>
+
+):
+1:    <% content_for :title, "New user" %>
+2:    
+3:    <h1>New user</h1>
+4:    
+5:    <%= render "form", user: @user %>
+6:    <br>
+7:    
+8:    <div>
+9:      <%= #link_to "Back to users", users_path %>
+10:    </div>
+  
+app/views/users/new.html.erb:10: syntax error, unexpected '<'
+app/views/users/new.html.erb:12: unknown regexp options - vw
+app/views/users/new.html.erb:13: unterminated string meets end of file
+
+Information for cause: ActiveSupport::SyntaxErrorProxy (/app/sample_app/app/views/users/new.html.erb:10: syntax error, unexpected '<'
+</div>
+^
+/app/sample_app/app/views/users/new.html.erb:12: unknown regexp options - vw
+...safe_append='<!-- END app/views/users/new.html.erb -->';@out...
+...                         ^~~~~~
+/app/sample_app/app/views/users/new.html.erb:13: unterminated string meets end of file
+          end
+             ^
+):
+  
+app/views/users/new.html.erb:10: syntax error, unexpected '<'
+app/views/users/new.html.erb:12: unknown regexp options - vw
+app/views/users/new.html.erb:13: unterminated string meets end of file
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:05:28 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 40.7ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 52.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 145.8ms | GC: 0.1ms)
+Completed 200 OK in 788ms (Views: 156.9ms | ActiveRecord: 18.8ms (0 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:06:02 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 134.4ms | GC: 0.1ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 150.0ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 181.6ms | GC: 0.1ms)
+Completed 200 OK in 1018ms (Views: 197.0ms | ActiveRecord: 26.3ms (0 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:06:08 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 1.6ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 3.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.3ms | GC: 0.0ms)
+Completed 200 OK in 760ms (Views: 8.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:06:44 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 6.6ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 22.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 76.4ms | GC: 0.0ms)
+Completed 200 OK in 784ms (Views: 90.8ms | ActiveRecord: 23.9ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2025-07-21 15:07:55 +0000
+Processing by UsersController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"name"=>"藤原", "email"=>"[FILTERED]", "password"=>"[FILTERED]", "password_digest"=>"[FILTERED]"}, "commit"=>"登録"}
+Completed 500 Internal Server Error in 795ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+BCrypt::Errors::InvalidHash (invalid hash):
+  
+app/controllers/users_controller.rb:24:in `create'
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:10:03 +0000
+  
+ArgumentError (Missing :controller key on routes definition, please check your routes.):
+  
+config/routes.rb:2:in `block in <main>'
+config/routes.rb:1:in `<main>'
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:10:33 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 7.2ms | GC: 0.8ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 24.2ms | GC: 0.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 54.9ms | GC: 0.8ms)
+Completed 200 OK in 761ms (Views: 68.1ms | ActiveRecord: 21.3ms (0 queries, 0 cached) | GC: 2.1ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2025-07-21 15:11:13 +0000
+Processing by UsersController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"name"=>"藤原", "email"=>"[FILTERED]", "password"=>"[FILTERED]", "password_digest"=>"[FILTERED]"}, "commit"=>"登録"}
+Completed 500 Internal Server Error in 775ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+BCrypt::Errors::InvalidHash (invalid hash):
+  
+app/controllers/users_controller.rb:24:in `create'
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:17:19 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 5.7ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 18.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 55.1ms | GC: 0.4ms)
+Completed 200 OK in 699ms (Views: 69.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.7ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2025-07-21 15:17:33 +0000
+Processing by UsersController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"name"=>"藤原", "email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"登録"}
+Completed 500 Internal Server Error in 840ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+BCrypt::Errors::InvalidHash (invalid hash):
+  
+app/controllers/users_controller.rb:24:in `create'
+  [1m[36mUser Load (45.7ms)[0m  [1m[34mSELECT "users".* FROM "users" /* loading for pp */ LIMIT 11 /*application='SampleApp'*/[0m
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:23:51 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 6.2ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 21.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 51.3ms | GC: 0.8ms)
+Completed 200 OK in 755ms (Views: 65.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 8.6ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2025-07-21 15:24:04 +0000
+Processing by UsersController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"name"=>"藤原", "email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"登録"}
+Completed 500 Internal Server Error in 739ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+BCrypt::Errors::InvalidHash (invalid hash):
+  
+app/controllers/users_controller.rb:24:in `create'
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:34:01 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (2.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 60.2ms | GC: 0.4ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 73.8ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 165.4ms | GC: 0.9ms)
+Completed 200 OK in 1649ms (Views: 199.9ms | ActiveRecord: 33.4ms (0 queries, 0 cached) | GC: 57.1ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2025-07-21 15:34:15 +0000
+Processing by UsersController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"name"=>"藤原", "email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"登録"}
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*action='create',application='SampleApp',controller='users'*/[0m
+  ↳ app/controllers/users_controller.rb:27:in `block in create'
+  [1m[36mUser Exists? (4.8ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = 'shu113104go@docomo.ne.jp' LIMIT 1 /*action='create',application='SampleApp',controller='users'*/[0m
+  ↳ app/controllers/users_controller.rb:27:in `block in create'
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password", "created_at", "updated_at", "password_digest") VALUES ('藤原', 'shu113104go@docomo.ne.jp', NULL, '2025-07-21 15:34:16.880296', '2025-07-21 15:34:16.880296', '$2a$12$MFMpmUAvdvAtJoqD76H0MOYhL2nt/ovkYv2OLpNkTgEUMdW7cBEw6') RETURNING "id" /*action='create',application='SampleApp',controller='users'*/[0m
+  ↳ app/controllers/users_controller.rb:27:in `block in create'
+  [1m[36mTRANSACTION (6.9ms)[0m  [1m[35mCOMMIT TRANSACTION /*action='create',application='SampleApp',controller='users'*/[0m
+  ↳ app/controllers/users_controller.rb:27:in `block in create'
+Redirected to http://localhost:3002/users/1
+Completed 302 Found in 845ms (ActiveRecord: 12.9ms (2 queries, 0 cached) | GC: 1.0ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at 2025-07-21 15:34:16 +0000
+Processing by UsersController#show as TURBO_STREAM
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (1.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1 /*action='show',application='SampleApp',controller='users'*/[0m
+  ↳ app/controllers/users_controller.rb:63:in `set_user'
+  Rendering layout layouts/application.html.erb
+  Rendering users/show.html.erb within layouts/application
+  Rendered users/_user.html.erb (Duration: 2.7ms | GC: 0.0ms)
+  Rendered users/show.html.erb within layouts/application (Duration: 37.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 40.1ms | GC: 0.0ms)
+Completed 200 OK in 680ms (Views: 41.2ms | ActiveRecord: 1.9ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/users" for 127.0.0.1 at 2025-07-21 15:34:25 +0000
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/index.html.erb within layouts/application
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" /*action='index',application='SampleApp',controller='users'*/[0m
+  ↳ app/views/users/index.html.erb:8
+  Rendered users/_user.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered users/index.html.erb within layouts/application (Duration: 17.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 21.3ms | GC: 0.0ms)
+Completed 200 OK in 709ms (Views: 22.8ms | ActiveRecord: 1.1ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/users/new" for 127.0.0.1 at 2025-07-21 15:34:27 +0000
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/_form.html.erb (Duration: 2.8ms | GC: 0.0ms)
+  Rendered users/new.html.erb within layouts/application (Duration: 5.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.6ms | GC: 0.0ms)
+Completed 200 OK in 759ms (Views: 9.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mUser Load (8.1ms)[0m  [1m[34mSELECT "users".* FROM "users" /* loading for pp */ LIMIT 11 /*application='SampleApp'*/[0m
+Started GET "/sessions/new" for 127.0.0.1 at 2025-07-21 15:36:25 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/sessions/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 15:36:30 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 5.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 42.8ms | GC: 6.3ms)
+Completed 200 OK in 670ms (Views: 53.2ms | ActiveRecord: 8.4ms (0 queries, 0 cached) | GC: 6.3ms)
+
+
+Started GET "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2" for 127.0.0.1 at 2025-07-21 15:36:33 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 15:36:35 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 2.2ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.6ms | GC: 0.3ms)
+Completed 200 OK in 554ms (Views: 7.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 15:36:47 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 5.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 33.5ms | GC: 0.0ms)
+Completed 200 OK in 783ms (Views: 45.6ms | ActiveRecord: 8.2ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 15:37:54 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 15:37:54 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 2.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.1ms | GC: 0.0ms)
+Completed 200 OK in 631ms (Views: 5.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 15:38:02 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 15:38:02 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 2.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.3ms | GC: 0.0ms)
+Completed 200 OK in 601ms (Views: 4.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:06:43 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:06:44 +0000
+Processing by SessionController#new as HTML
+Started GET "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2" for 127.0.0.1 at 2025-07-21 16:06:45 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2"):
+  
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 11.1ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 86.1ms | GC: 9.8ms)
+Completed 200 OK in 1031ms (Views: 126.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 18.9ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:07:39 +0000
+  
+ArgumentError (Missing :controller key on routes definition, please check your routes.):
+  
+config/routes.rb:2:in `block in <main>'
+config/routes.rb:1:in `<main>'
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:07:54 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 8.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 44.6ms | GC: 0.7ms)
+Completed 200 OK in 793ms (Views: 61.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 1.2ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:08:07 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:08:07 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.7ms | GC: 0.0ms)
+Completed 200 OK in 618ms (Views: 4.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:09:14 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 6.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 37.7ms | GC: 0.0ms)
+Completed 200 OK in 732ms (Views: 50.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:09:31 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:09:31 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 1.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.7ms | GC: 0.0ms)
+Completed 200 OK in 700ms (Views: 5.8ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:10:08 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:10:09 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 25.9ms | GC: 19.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 84.8ms | GC: 45.3ms)
+Completed 200 OK in 1324ms (Views: 106.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 55.1ms)
+
+
+Started GET "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2" for 127.0.0.1 at 2025-07-21 16:10:46 +0000
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:10:46 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2"):
+  
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:10:47 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 5.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 36.1ms | GC: 0.0ms)
+Completed 200 OK in 747ms (Views: 48.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:11:27 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 4.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 33.9ms | GC: 0.0ms)
+Completed 200 OK in 767ms (Views: 46.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/session/new" for 127.0.0.1 at 2025-07-21 16:11:39 +0000
+  
+ActionController::RoutingError (No route matches [POST] "/session/session/new"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:11:39 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 2.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 0.4ms)
+Completed 200 OK in 705ms (Views: 8.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:13:06 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 5.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 34.4ms | GC: 0.0ms)
+Completed 200 OK in 803ms (Views: 47.8ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/new" for 127.0.0.1 at 2025-07-21 16:13:16 +0000
+Processing by SessionController#new as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.3ms | GC: 0.0ms)
+Completed 200 OK in 684ms (Views: 5.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:14:03 +0000
+  
+SyntaxError (/app/sample_app/config/routes.rb:3: syntax error, unexpected local variable or method, expecting `end' or dummy end
+  post "/session/new" to: "session#create"
+                      ^~
+):
+  
+config/routes.rb:3: syntax error, unexpected local variable or method, expecting `end' or dummy end
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:15:09 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 4.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 38.9ms | GC: 0.7ms)
+Completed 200 OK in 955ms (Views: 53.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 1.8ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:15:19 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Completed 500 Internal Server Error in 627ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.4ms)
+
+
+  
+NameError (undefined local variable or method `user_params' for #<SessionController:0x00000000040a38>):
+  
+app/controllers/session_controller.rb:7:in `create'
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:15:54 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 7.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 42.1ms | GC: 0.0ms)
+Completed 200 OK in 954ms (Views: 56.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:16:07 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Started GET "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2" for 127.0.0.1 at 2025-07-21 16:16:08 +0000
+Completed 500 Internal Server Error in 748ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NameError (undefined local variable or method `user_params' for #<SessionController:0x00000000045c18>):
+  
+app/controllers/session_controller.rb:7:in `create'
+  
+ActionController::RoutingError (No route matches [GET] "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:17:26 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 6.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 34.3ms | GC: 0.2ms)
+Completed 200 OK in 689ms (Views: 44.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 1.9ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:17:37 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Completed 500 Internal Server Error in 221448ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 111.2ms)
+
+
+  
+SystemExit (exit):
+  
+(rdbg)//app/sample_app/app/controllers/session_controller.rb:1:in `exit'
+(rdbg)//app/sample_app/app/controllers/session_controller.rb:1:in `create'
+app/controllers/session_controller.rb:11:in `create'
+Started GET "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2" for 127.0.0.1 at 2025-07-21 16:21:18 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/session/%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2"):
+  
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:21:52 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (3.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 62.7ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 167.5ms | GC: 0.6ms)
+Completed 200 OK in 1987ms (Views: 198.9ms | ActiveRecord: 62.2ms (0 queries, 0 cached) | GC: 55.2ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:22:10 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Completed   in 20910ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 1.5ms)
+
+
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:22:45 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (3.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='SampleApp'*/[0m
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 61.5ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 185.9ms | GC: 0.4ms)
+Completed 200 OK in 1968ms (Views: 218.4ms | ActiveRecord: 57.0ms (0 queries, 0 cached) | GC: 62.7ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:22:58 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Completed 500 Internal Server Error in 752ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `login' for #<SessionController:0x0000000000d868>):
+  
+app/controllers/session_controller.rb:13:in `create'
+Started GET "/session/new" for 127.0.0.1 at 2025-07-21 16:25:01 +0000
+Processing by SessionController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering session/new.html.erb within layouts/application
+  Rendered session/new.html.erb within layouts/application (Duration: 6.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 37.0ms | GC: 0.0ms)
+Completed 200 OK in 809ms (Views: 49.5ms | ActiveRecord: 26.8ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/session/create" for 127.0.0.1 at 2025-07-21 16:25:10 +0000
+Processing by SessionController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"[FILTERED]", "password"=>"[FILTERED]"}, "commit"=>"確定"}
+Redirected to http://localhost:3002/
+Completed 302 Found in 718ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2025-07-21 16:25:11 +0000
+Processing by MeisaiController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering meisai/index.html.erb within layouts/application
+  Rendered meisai/index.html.erb within layouts/application (Duration: 3.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 0.0ms)
+Completed 200 OK in 783ms (Views: 10.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2025-07-21 16:30:07 +0000
+Processing by MeisaiController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering meisai/index.html.erb within layouts/application
+  Rendered meisai/index.html.erb within layouts/application (Duration: 3.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 38.1ms | GC: 0.0ms)
+Completed 200 OK in 712ms (Views: 49.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
